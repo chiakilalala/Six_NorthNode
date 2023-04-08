@@ -24,11 +24,7 @@ app.use(express.json()) // 設定 express 可以解析 json
 app.use(express.urlencoded({ extended: false })) // 設定 express 可以解析 urlencoded
 app.use(cookieParser()) // 設定 cookieParser
 app.use(express.static(path.join(__dirname, 'public'))) // 設定 express 可以讀取 public 資料夾內的檔案
-app.use(cors({
-  origin: ['*'],
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-  allowedHeaders: ['Content-Type', 'Authorization']
-})) // 設定 cors
+app.use(cors()) // 設定 cors
 
 // Set up routes
 app.use('/example', routeExample)
