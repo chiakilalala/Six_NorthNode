@@ -1,0 +1,12 @@
+# Logs
+logs
+*.log
+
+# Runtime data
+node_modules
+.DS_Store
+dist
+*.local
+
+# Test files
+coverage
