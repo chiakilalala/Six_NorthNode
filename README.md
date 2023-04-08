@@ -1,4 +1,5 @@
 ### 專案啟動
+test
 - 終端機輸入 node -v 確認 node 版本為 v16.15.1。
 - 終端機輸入 npm ci 安裝。 
 - .env 檔案中替換為自己 mongodb 連線資訊。
