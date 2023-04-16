@@ -6,8 +6,16 @@ const doc = {
     title: 'META API',
     description: 'API文件'
   },
-  host: config.host,
-  schemes: ['http', 'https']
+  host: config.HOST,
+  schemes: ['http', 'https'],
+  securityDefinitions: {
+    apiKeyAuth: {
+      type: 'apiKey',
+      in: 'header', // can be 'header', 'query' or 'cookie'
+      name: 'Authorization', // name of the header, query parameter or cookie
+      description: 'jwt token'
+    }
+  }
 }
 
 const outputFile = './swagger_output.json'

@@ -26,8 +26,8 @@ app.use(cookieParser()) // 設定 cookieParser
 app.use(express.static(path.join(__dirname, 'public'))) // 設定 express 可以讀取 public 資料夾內的檔案
 app.use(cors()) // 設定 cors
 
-// Set up routes
-app.use('/example', routeExample)
+// Set up routes 請使用 /api/xxx
+app.use('/api/example', routeExample)
 app.use('/api-doc', swaggerUi.serve, swaggerUi.setup(swaggerFile)) // 設定 swagger 的路由
 
 // Set up error handling
