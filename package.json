@@ -5,8 +5,8 @@
   "scripts": {
     "start": "nodemon ./bin/www",
     "test": "jest",
-    "swagger-dev": "NODE_ENV=development node ./swagger.js",
-    "swagger-production": "NODE_ENV=production node ./swagger.js",
+    "swagger-dev": "cross-env NODE_ENV=development node ./swagger.js",
+    "swagger-production": "cross-env NODE_ENV=production node ./swagger.js",
     "prepare": "husky install",
     "lint": "eslint --fix --ext .js ."
   },
