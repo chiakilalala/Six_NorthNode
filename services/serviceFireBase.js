@@ -2,6 +2,7 @@ const admin = require('firebase-admin')
 const config = require('../utilities/config')
 const { v4: uuidv4 } = require('uuid')
 const serviceResponse = require('@/services/serviceResponse')
+const httpCode = require('@/utilities/httpCode')
 admin.initializeApp({
   credential: admin.credential.cert({
     type: config.FIRE_BASE.TYPE,
@@ -21,7 +22,7 @@ const bucket = admin.storage().bucket()
 const serviceFireBase = {
   uploadFile: async (req, res) => {
     if (!req.files.length) {
-      throw serviceResponse.error(400, '尚未上傳檔案')
+      throw serviceResponse.error(httpCode.BAD_REQUEST, '尚未上傳檔案')
     }
     // 取得上傳的檔案資訊列表裡面的第一個檔案
     const file = req.files[0]
@@ -43,7 +44,7 @@ const serviceFireBase = {
       // 取得檔案的網址
       blob.getSignedUrl(config, (err, fileUrl) => {
         if (err) {
-          throw serviceResponse.error(500, '取得檔案網址失敗')
+          throw serviceResponse.error(httpCode.INTERNAL_SERVER_ERROR, '取得檔案網址失敗')
         }
         serviceResponse.success(res, { fileUrl })
       })
@@ -52,7 +53,7 @@ const serviceFireBase = {
     // 如果上傳過程中發生錯誤，會觸發 error 事件
     blobStream.on('error', (err) => {
       if (err) {
-        throw serviceResponse.error(500, '上傳失敗')
+        throw serviceResponse.error(httpCode.INTERNAL_SERVER_ERROR, '上傳失敗')
       }
     })
   }

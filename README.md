@@ -1,3 +1,6 @@
+### api 網址
+https://six-northnode.onrender.com/api-doc
+
 ### 專案啟動
 - 終端機輸入 node -v 確認 node 版本為 v16.15.1。
 - 終端機輸入 npm ci 安裝。 
