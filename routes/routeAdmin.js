@@ -4,7 +4,7 @@ const serviceError = require('@/services/serviceError')
 const controllerAdmin = require('@/controllers/controllerAdmin')
 const serviceResponse = require('@/services/serviceResponse')
 const httpCode = require('@/utilities/httpCode')
-
+const Admin = require('../models/modelAdmin')
 const validator = require('validator')
 const serviceJWT = require('@/services/serviceJWT')
 const middlewareAdminAuth = require('@/middlewares/middlewareAdminAuth')
@@ -12,10 +12,12 @@ const middlewareAdminAuth = require('@/middlewares/middlewareAdminAuth')
 router.post(
   '/signup',
   serviceError.asyncError(async (req, res, next) => {
-    const { email, password } = req.body
-    if (!email || !password) {
+    const { name, email, password } = req.body
+
+    if (!email || !password || !name) {
       serviceResponse.error(httpCode.BAD_REQUEST, '欄位不可為空', next)
     }
+
     if (!validator.isLength(password, { min: 8 })) {
       serviceResponse.error(httpCode.BAD_REQUEST, '密碼長度至少8位', next)
     }
@@ -23,6 +25,7 @@ router.post(
     if (!validator.isEmail(email)) {
       serviceResponse.error(httpCode.BAD_REQUEST, '信箱格式錯誤', next)
     }
+
     next()
   }),
   serviceError.asyncError(async (req, res, next) => {
@@ -36,16 +39,18 @@ router.post(
             "name":"admin",
             "email":"admin@gmail.com",
             "password":"admin123",
-            "confirmPassword":"admin123"
+            "confirmPassword":"admin123",
+            "role":"admin"
         }
       }
      */
 
     const { name, email, password } = req.body
-    const newUser = await controllerAdmin.signUp(name, email, password)
-    const token = serviceJWT.generateJWT(newUser)
+    const newAdmin = await controllerAdmin.signUp(name, email, password)
+    console.log(newAdmin)
+    const token = serviceJWT.generateJWT(newAdmin)
     serviceResponse.success(res, {
-      user: newUser,
+      user: newAdmin,
       token
     })
   })
@@ -54,20 +59,21 @@ router.post(
 router.post(
   '/login',
   serviceError.asyncError(async (req, res, next) => {
-    const { email, password, name } = req.body
+    const { email, password } = req.body
+    const isAdmin = await Admin.findOne({ email, role: 'admin' })
     // 驗證
     if (!email || !password) {
-      serviceResponse.error(httpCode.BAD_REQUEST, '欄位不可為空', next)
+      serviceResponse.error(httpCode.BAD_REQUEST, '欄位不可為空')
     }
     if (!validator.isLength(password, { min: 8 })) {
-      serviceResponse.error(httpCode.BAD_REQUEST, '密碼長度至少8位', next)
+      serviceResponse.error(httpCode.BAD_REQUEST, '密碼長度至少8位')
     }
 
     if (!validator.isEmail(email)) {
-      serviceResponse.error(httpCode.BAD_REQUEST, '信箱格式錯誤', next)
+      serviceResponse.error(httpCode.BAD_REQUEST, '信箱格式錯誤')
     }
-    if (name !== 'admin') {
-      serviceResponse.error(httpCode.BAD_REQUEST, '非管理者本人', next)
+    if (!isAdmin) {
+      serviceResponse.error(httpCode.BAD_REQUEST, '非管理者角色')
     }
     next()
   }),
@@ -84,11 +90,12 @@ router.post(
         }
       }
      */
-    const { email, password } = req.body
-    const newUser = await controllerAdmin.Login(email, password)
-    const token = serviceJWT.generateJWT(newUser)
+    const { email, password, role } = req.body
+    const newAdmin = await controllerAdmin.Login(email, password, role)
+    const token = serviceJWT.generateJWT(newAdmin)
+
     serviceResponse.success(res, '登入成功', {
-      user: newUser,
+      user: newAdmin,
       token
     })
   })
