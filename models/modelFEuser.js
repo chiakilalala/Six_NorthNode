@@ -3,7 +3,7 @@ const { Schema, model } = require('mongoose')
 const FSuserSchema = new Schema(
   {
     email: { type: String, required: true, trim: true, unique: true },
-    password: { type: String, required: true },
+    password: { type: String, required: true, select: false },
     firstName: { type: String, trim: true },
     lastName: { type: String, trim: true },
     nickName: { type: String, trim: true },

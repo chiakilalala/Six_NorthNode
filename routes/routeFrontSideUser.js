@@ -49,7 +49,7 @@ router
   // 登入
   .post('/signin', serviceError.asyncError(async (req, res, next) => {
     /**
-     * #swagger.tags = ['Signin']
+     * #swagger.tags = ['User']
      * #swagger.summary = '會員登入'
      * #swagger.description = '會員登入'
      * #swagger.parameters['body'] = {
@@ -80,7 +80,7 @@ router
   // 驗證信箱是否重複 不能放在需要驗證的路由前面
   .post('/checkEmail', serviceError.asyncError(async (req, res, next) => {
     /**
-     * #swagger.tags = ['CheckEmail']
+     * #swagger.tags = ['User']
      * #swagger.summary = '驗證信箱重複'
      * #swagger.description = '驗證信箱重複'
      * #swagger.parameters['body'] = {
@@ -120,7 +120,7 @@ router
   // 修改
   .post('/updateUser', middlewareAuth.loginAuth, serviceError.asyncError(async (req, res, next) => {
     /**
-     * #swagger.tags = ['UpdateUser']
+     * #swagger.tags = ['User']
      * #swagger.summary = '修改會員資料'
      * #swagger.description = '修改會員資料'
      * #swagger.parameters['body'] = {
@@ -164,5 +164,30 @@ router
     serviceResponse.success(res, result)
   }))
 
+  // 取得會員資料
+  .get('/getUser', middlewareAuth.loginAuth, serviceError.asyncError(async (req, res, next) => {
+    /**
+     * #swagger.tags = ['User']
+     * #swagger.summary = '取得會員資料'
+     * #swagger.description = '取得會員資料'
+      * #swagger.responses[200] = {
+        description: '回傳物件',
+        schema: {
+          "status": true,
+          "data": "{
+          "_id": "644921a5f392998795e9c8ff",
+          "email": "user1@gmail.com",
+          "password": "$2a$10$IBsir4sPL1nZnGp4K9JOLOu5E./iFOko.20w/EnFsFMOJH9e3B1Ve",
+          "profilePic": "/images/profilePic.jpeg",
+          "createdAt": "2023-04-26T13:05:41.123Z",
+          "updatedAt": "2023-04-26T16:02:43.035Z",
+          "__v": 0
+          }",
+        }
+      }
+     */
+    const result = await controllerFrontSideUser.getUser(req, res, next)
+    serviceResponse.success(res, result)
+  }))
 // 刪除
 module.exports = router

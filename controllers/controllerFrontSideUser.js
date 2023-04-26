@@ -47,6 +47,7 @@ const controllerFrontSideUser = {
   },
   // 單純修改密碼
   async updateUser (req, res, next) {
+    // 從jwt取得使用者id
     const { user } = req
     const { password, confirmPassword } = req.body
     if (!password || !confirmPassword) {
@@ -74,6 +75,13 @@ const controllerFrontSideUser = {
     }
 
     return result
+  },
+  // 取得會員資料
+  async getUser (req, res, next) {
+    // 從jwt取得使用者id
+    const { user } = req
+    const UserData = await modelFEuser.findById({ _id: user })
+    return UserData
   }
 }
 
