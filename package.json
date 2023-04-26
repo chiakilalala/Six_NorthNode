@@ -5,17 +5,20 @@
   "scripts": {
     "start": "nodemon ./bin/www",
     "test": "jest",
-    "swagger-dev": "NODE_ENV=development node ./swagger.js",
-    "swagger-production": "NODE_ENV=production node ./swagger.js",
+    "swagger-dev": "cross-env NODE_ENV=development node ./swagger.js",
+    "swagger-production": "cross-env NODE_ENV=production node ./swagger.js",
     "prepare": "husky install",
     "lint": "eslint --fix --ext .js ."
   },
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "cookie-parser": "~1.4.4",
     "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
     "debug": "~2.6.9",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.0",
     "module-alias": "^2.2.2",
     "mongoose": "^7.0.3",
     "morgan": "~1.9.1"

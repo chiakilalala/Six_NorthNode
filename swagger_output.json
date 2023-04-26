@@ -5,7 +5,7 @@
     "title": "META API",
     "description": "API文件"
   },
-  "host": "blog-server-izfg.onrender.com",
+  "host": "six-northnode.onrender.com",
   "basePath": "/",
   "tags": [],
   "schemes": [
@@ -44,6 +44,38 @@
             }
           }
         }
+      }
+    },
+    "/fsuser/signup": {
+      "post": {
+        "tags": [],
+        "description": "",
+        "parameters": [],
+        "responses": {}
+      }
+    },
+    "/fsuser/signin": {
+      "post": {
+        "tags": [],
+        "description": "",
+        "parameters": [],
+        "responses": {}
+      }
+    },
+    "/fsuser/checkEmail": {
+      "post": {
+        "tags": [],
+        "description": "",
+        "parameters": [],
+        "responses": {}
+      }
+    },
+    "/fsuser/updateUser": {
+      "post": {
+        "tags": [],
+        "description": "",
+        "parameters": [],
+        "responses": {}
       }
     }
   },
