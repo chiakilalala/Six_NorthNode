@@ -12,10 +12,18 @@
     "http",
     "https"
   ],
+  "securityDefinitions": {
+    "apiKeyAuth": {
+      "type": "apiKey",
+      "in": "header",
+      "name": "Authorization",
+      "description": "jwt token"
+    }
+  },
   "consumes": [],
   "produces": [],
   "paths": {
-    "/example/": {
+    "/api/example/": {
       "get": {
         "tags": [
           "Example"

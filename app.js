@@ -17,6 +17,7 @@ const middlewareError = require('@/middlewares/middlewareError')
 
 // Load routes 請使用 ./ 引入不然 swagger 會找不到
 const routeExample = require('./routes/routeExample') // 引入自訂的 routeExample
+const routeUpload = require('./routes/routeUpload') // 引入自訂的 routeUpload
 const routeFrontSideUser = require('./routes/routeFrontSideUser')
 
 // Set up middleware
@@ -27,8 +28,9 @@ app.use(cookieParser()) // 設定 cookieParser
 app.use(express.static(path.join(__dirname, 'public'))) // 設定 express 可以讀取 public 資料夾內的檔案
 app.use(cors()) // 設定 cors
 
-// Set up routes
-app.use('/example', routeExample)
+// Set up routes 請使用 /api/xxx
+app.use('/api/example', routeExample)
+app.use('/api/upload', routeUpload)
 app.use('/api-doc', swaggerUi.serve, swaggerUi.setup(swaggerFile)) // 設定 swagger 的路由
 // 前台會員路由
 app.use('/fsuser', routeFrontSideUser)

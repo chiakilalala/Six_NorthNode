@@ -1,8 +1,11 @@
+const httpCode = require('@/utilities/httpCode')
+
 const middlewareError = (err, req, res, next) => {
   // dev
-  err.statusCode = err.statusCode || 500
+  err.statusCode = err.statusCode || httpCode.INTERNAL_SERVER_ERROR
   if (process.env.NODE_ENV === 'development') {
     return res.status(err.statusCode).json({
+      status: false,
       message: err.message,
       error: err,
       stack: err.stack
@@ -17,14 +20,17 @@ const middlewareError = (err, req, res, next) => {
 
   if (err.isOperational) {
     return res.status(err.statusCode).json({
+      status: false,
+      error: err,
       message: err.message
     })
   }
   // log 紀錄
   console.error('出現重大錯誤', err)
   // 送出罐頭預設訊息
-  res.status(500).json({
-    status: 'error',
+  res.status(httpCode.INTERNAL_SERVER_ERROR).json({
+    status: false,
+    error: err,
     message: '系統錯誤，請恰系統管理員'
   })
 }
