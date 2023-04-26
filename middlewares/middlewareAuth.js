@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken')
 const serviceResponse = require('@/services/serviceResponse')
+const httpCode = require('@/utilities/httpCode')
 
 const middlewareAuth = {
   async loginAuth (req, res, next) {
@@ -13,7 +14,7 @@ const middlewareAuth = {
       token = req.headers.authorization.split(' ')[1]
     }
     if (!token) {
-      serviceResponse.error(400, '無token尚未登入')
+      serviceResponse.error(httpCode.UNAUTHORIZED, '無token尚未登入')
     }
 
     // 有 token
