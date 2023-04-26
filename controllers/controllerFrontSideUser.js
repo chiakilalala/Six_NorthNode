@@ -70,7 +70,7 @@ const controllerFrontSideUser = {
     }
 
     const result = {
-      data: `${email} 可以使用`
+      message: `${email} 可以使用`
     }
 
     return result
