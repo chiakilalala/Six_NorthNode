@@ -50,7 +50,11 @@ const controllerFrontSideUser = {
     return authData
   },
   // 單純修改密碼
+<<<<<<< HEAD
   async changePassword (req, res, next) {
+=======
+  async updateUser (req, res, next) {
+>>>>>>> f4412ec (【新增】取得會員資料)
     // 從jwt取得使用者id
     const { user } = req
     const { password, confirmPassword } = req.body
