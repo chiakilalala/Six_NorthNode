@@ -6,7 +6,6 @@ const httpCode = require('@/utilities/httpCode')
 
 const middlewareAdminAuth = serviceError.asyncError(async (req, res, next) => {
   // 確認 token 是否存在
-
   let token = null
   if (
     req.headers.authorization &&
@@ -30,7 +29,6 @@ const middlewareAdminAuth = serviceError.asyncError(async (req, res, next) => {
   // Set the user in the request object
   req.user = currentUser
   // Call the next middleware
-
   next()
 })
 

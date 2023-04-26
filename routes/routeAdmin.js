@@ -25,7 +25,6 @@ router.post(
     if (!validator.isEmail(email)) {
       serviceResponse.error(httpCode.BAD_REQUEST, '信箱格式錯誤', next)
     }
-
     next()
   }),
   serviceError.asyncError(async (req, res, next) => {
