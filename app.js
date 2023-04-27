@@ -19,6 +19,7 @@ const middlewareError = require('@/middlewares/middlewareError')
 const routeExample = require('./routes/routeExample') // 引入自訂的 routeExample
 const routeUpload = require('./routes/routeUpload') // 引入自訂的 routeUpload
 const routeFrontSideUser = require('./routes/routeFrontSideUser')
+const routeAdmin = require('./routes/routeAdmin')
 
 // Set up middleware
 app.use(logger('dev')) // 設定 morgan 的 logger，可以在 server 端看到請求的細節
@@ -33,6 +34,7 @@ app.use('/api/example', routeExample)
 app.use('/api/upload', routeUpload)
 app.use('/api/fsuser', routeFrontSideUser)
 app.use('/api-doc', swaggerUi.serve, swaggerUi.setup(swaggerFile)) // 設定 swagger 的路由
+app.use('/api/admin', routeAdmin)
 
 // Set up error handling
 app.use(middlewareError) // 設定錯誤處理
