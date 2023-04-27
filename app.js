@@ -6,7 +6,7 @@ const logger = require('morgan')
 const cors = require('cors')
 const serviceDB = require('@/services/serviceDB') // 引入自訂的 serviceDB
 const swaggerUi = require('swagger-ui-express') // 引入 swagger-ui-express
-const swaggerFile = require('@/swagger_output.json')
+const swaggerFile = require('./swagger_output.json')
 
 // 引入 swagger 的 json 檔案
 const app = express() // 建立 express 的實體

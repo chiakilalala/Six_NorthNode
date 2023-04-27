@@ -3,6 +3,11 @@ const serviceResponse = require('@/services/serviceResponse')
 const httpCode = require('@/utilities/httpCode')
 
 const middlewareAuth = {
+  /**
+     * #swagger.tags = ['Auth']
+     * #swagger.summary = '驗證用中介軟體'
+     * #swagger.description = '驗證用中介軟體'
+     */
   async loginAuth (req, res, next) {
     let token
     // 取得現在時間 單位為秒

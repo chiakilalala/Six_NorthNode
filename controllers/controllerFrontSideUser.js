@@ -31,6 +31,9 @@ const controllerFrontSideUser = {
       return next(serviceResponse.error(400, '帳號密碼必填'))
     }
     const dbRes = await modelFEuser.findOne({ email: userData.email }).select('+password')
+    if (dbRes === null) {
+      return next(serviceResponse.error(httpCode.NOT_FOUND, '帳號不存在'))
+    }
     const compaire = await hash.compaire(userData.password, dbRes.password)
     if (!compaire) {
       return next(serviceResponse.error(httpCode.NOT_FOUND, '密碼錯誤'))
@@ -39,7 +42,8 @@ const controllerFrontSideUser = {
     const signinToken = await token.signinToken(dbRes.id)
 
     const authData = {
-      token: signinToken,
+      token: `Bearer ${signinToken}`,
+      id: dbRes.id,
       email: dbRes.email
     }
 
