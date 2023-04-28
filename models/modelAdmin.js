@@ -20,6 +20,12 @@ const modelExample = mongoose.model(
       minlength: 8,
       select: false
     },
+    role: {
+      type: String,
+      default: 'admin',
+      enum: ['user', 'admin']
+
+    },
     createdAt: {
       type: Date,
       default: Date.now,

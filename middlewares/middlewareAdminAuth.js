@@ -6,7 +6,7 @@ const httpCode = require('@/utilities/httpCode')
 
 const middlewareAdminAuth = serviceError.asyncError(async (req, res, next) => {
   // 確認 token 是否存在
-  console.log(req)
+
   let token = null
   if (
     req.headers.authorization &&
@@ -14,9 +14,8 @@ const middlewareAdminAuth = serviceError.asyncError(async (req, res, next) => {
 
   ) {
     token = req.headers.authorization.split(' ')[1]
-    // console.log(token)
   }
-  // console.log(req.headers)
+
   if (!token) {
     return serviceResponse.error(400, '沒有權限', next)
   }
@@ -31,7 +30,7 @@ const middlewareAdminAuth = serviceError.asyncError(async (req, res, next) => {
   // Set the user in the request object
   req.user = currentUser
   // Call the next middleware
-  console.log(currentUser)
+
   next()
 })
 

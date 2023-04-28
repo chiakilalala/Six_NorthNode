@@ -1,28 +1,34 @@
 const Admin = require('../models/modelAdmin')
 const serviceResponse = require('@/services/serviceResponse.js')
 const bcrypt = require('bcryptjs')
+const httpCode = require('@/utilities/httpCode')
 
 const controllerAdmin = {
   async signUp (name, email, password) {
     const Passwordbcrypt = await bcrypt.hash(password, 12) // 密碼加密
-
-    const newUser = await Admin.create({
-      name, email, password: Passwordbcrypt
+    const findAdmin = await Admin.findOne({ email })
+    if (findAdmin) {
+      return serviceResponse.error(httpCode.BAD_REQUEST, '此E-mail已經註冊')
+    }
+    const newAdmin = await Admin.create({
+      name, email, password: Passwordbcrypt, role: 'admin' // 預設設定為管理員角色
 
     })
-    console.log(newUser)
-    return newUser
+
+    return newAdmin
   },
-  async Login (email, password, role) {
-    const OneAdmin = await Admin.findOne({ email }).select('+password') // 密碼補顯示
-    const auth = await bcrypt.compare(password, OneAdmin.password)
+  async Login (email, password) {
+    const NewAdmin = await Admin.findOne({ email }).select('+password') // 密碼補顯示
+    const auth = await bcrypt.compare(password, NewAdmin.password)
+
     if (!auth) {
-      throw serviceResponse.error(400, '密碼錯誤')
+      throw serviceResponse.error(httpCode.BAD_REQUEST, '密碼錯誤')
     }
     return {
-      _id: OneAdmin._id,
-      user: OneAdmin.name,
-      email: OneAdmin.email
+      _id: NewAdmin._id,
+      name: NewAdmin.name,
+      email: NewAdmin.email,
+      role: NewAdmin.role
 
     }
   }
