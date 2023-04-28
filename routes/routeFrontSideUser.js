@@ -190,7 +190,7 @@ router.post('/changePassword', middlewareAuth.loginAuth, serviceError.asyncError
       }
     }
    */
-  const result = await controllerFrontSideUser.updateUser(req, res, next)
+  const result = await controllerFrontSideUser.changePassword(req, res, next)
   serviceResponse.success(res, result)
 }))
 

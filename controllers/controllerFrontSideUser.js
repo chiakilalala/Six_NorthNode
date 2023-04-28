@@ -3,7 +3,7 @@ const modelFEuser = require('@/models/modelFEuser')
 const serviceResponse = require('@/services/serviceResponse')
 const httpCode = require('@/utilities/httpCode')
 
-const token = require('@/utilities/jwt')
+const serviceJWT = require('@/services/serviceJWT')
 
 const controllerFrontSideUser = {
   // 註冊
@@ -39,7 +39,7 @@ const controllerFrontSideUser = {
       return next(serviceResponse.error(httpCode.NOT_FOUND, '密碼錯誤'))
     }
 
-    const signinToken = await token.signinToken(dbRes.id)
+    const signinToken = serviceJWT.generateJWT(dbRes)
 
     const authData = {
       token: `Bearer ${signinToken}`,
@@ -50,7 +50,7 @@ const controllerFrontSideUser = {
     return authData
   },
   // 單純修改密碼
-  async updateUser (req, res, next) {
+  async changePassword (req, res, next) {
     // 從jwt取得使用者id
     const { user } = req
     const { password, confirmPassword } = req.body
