@@ -435,6 +435,10 @@
                       "type": "string",
                       "example": "user1@gmail.com"
                     },
+                    "nickName": {
+                      "type": "string",
+                      "example": "使用者暱稱"
+                    },
                     "profilePic": {
                       "type": "string",
                       "example": "/images/profilePic.jpeg"

@@ -1,7 +1,9 @@
 const express = require('express')
 const router = express.Router()
+const validator = require('validator')
 const serviceError = require('@/services/serviceError')
 const serviceResponse = require('@/services/serviceResponse')
+const httpCode = require('@/utilities/httpCode')
 const middlewareAuth = require('@/middlewares/middlewareAuth')
 
 const controllerMember = require('@/controllers/controllerMember')
@@ -42,7 +44,17 @@ router.post('/signup', serviceError.asyncError(async (req, res, next) => {
         }
       }
      */
-  const result = await controllerMember.signup(req, res, next)
+  const { email, password, nickName } = req.body
+
+  if (!email || !password || !nickName) {
+    serviceResponse.error(httpCode.PAYMENT_REQUIRED, '信箱、密碼、暱稱不可空白', next)
+  }
+
+  if (!validator.isEmail(email)) {
+    serviceResponse.error(httpCode.BAD_REQUEST, '信箱格式錯誤', next)
+  }
+
+  const result = await controllerMember.signup({ password, email, nickName }, next)
   serviceResponse.success(res, result)
 })
 )
@@ -97,7 +109,16 @@ router.post('/signin', serviceError.asyncError(async (req, res, next) => {
       }
     }
    */
-  const result = await controllerMember.signin(req, res, next)
+  const { email, password } = req.body
+  if (!email || !password) {
+    serviceResponse.error(httpCode.PAYMENT_REQUIRED, '帳號密碼必填', next)
+  }
+
+  if (!validator.isEmail(email)) {
+    serviceResponse.error(httpCode.BAD_REQUEST, '信箱格式錯誤', next)
+  }
+
+  const result = await controllerMember.signin(email, password, next)
   serviceResponse.success(res, result)
 }))
 
@@ -137,7 +158,13 @@ router.post('/checkEmail', serviceError.asyncError(async (req, res, next) => {
       }
     }
    */
-  const result = await controllerMember.checkEmail(req, res, next)
+  const { email } = req.body
+
+  if (!validator.isEmail(email)) {
+    serviceResponse.error(httpCode.BAD_REQUEST, '信箱格式錯誤', next)
+  }
+
+  const result = await controllerMember.checkEmail(email, next)
   serviceResponse.success(res, result)
 }))
 
@@ -165,6 +192,7 @@ router.post('/changePassword', middlewareAuth.loginAuth, serviceError.asyncError
         "data": {
         "_id": "644921a5f392998795e9c8ff",
         "email": "user1@gmail.com",
+        "nickName": "使用者暱稱",
         "profilePic": "/images/profilePic.jpeg",
         "createdAt": "2023-04-26T13:05:41.123Z",
         "updatedAt": "2023-04-26T16:02:43.035Z",
@@ -195,7 +223,18 @@ router.post('/changePassword', middlewareAuth.loginAuth, serviceError.asyncError
       }
     }
    */
-  const result = await controllerMember.changePassword(req, res, next)
+  // 從jwt取得使用者id
+  const { user } = req
+  const { password, confirmPassword } = req.body
+  if (!password || !confirmPassword) {
+    return next(serviceResponse.error(httpCode.PAYMENT_REQUIRED, '密碼不能為空'))
+  }
+
+  if (password !== confirmPassword) {
+    return next(serviceResponse.error(httpCode.NOT_ACCEPTABLE, '密碼不一致'))
+  }
+
+  const result = await controllerMember.changePassword(user, password)
   serviceResponse.success(res, result)
 }))
 
@@ -221,7 +260,9 @@ router.get('/getUser', middlewareAuth.loginAuth, serviceError.asyncError(async (
       }
     }
    */
-  const result = await controllerMember.getUser(req, res, next)
+  // 從jwt取得使用者id
+  const { user } = req
+  const result = await controllerMember.getUser(user)
   serviceResponse.success(res, result)
 }))
 
@@ -263,8 +304,7 @@ router.post('/updateUser', middlewareAuth.loginAuth, serviceError.asyncError(asy
    */
   const { nickName, phoneNumber, birthday, profilePic } = req.body
   const { user } = req
-  const data = { user, nickName, phoneNumber, birthday, profilePic }
-  const result = await controllerMember.updateUser(data)
+  const result = await controllerMember.updateUser({ user, nickName, phoneNumber, birthday, profilePic })
   serviceResponse.success(res, result)
 }))
 module.exports = router
