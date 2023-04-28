@@ -573,6 +573,80 @@
           }
         ]
       }
+    },
+    "/api/admin/signup": {
+      "post": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "管理員註冊",
+        "description": "管理員註冊",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "回傳範例資料",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "admin"
+                },
+                "email": {
+                  "type": "string",
+                  "example": "admin@gmail.com"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "admin123"
+                },
+                "confirmPassword": {
+                  "type": "string",
+                  "example": "admin123"
+                },
+                "role": {
+                  "type": "string",
+                  "example": "admin"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/login": {
+      "post": {
+        "tags": [
+          "AdminLogin"
+        ],
+        "summary": "管理員登入",
+        "description": "管理員登入",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "回傳範例資料",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "data": {
+                  "type": "string",
+                  "example": "登入成功"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {}
