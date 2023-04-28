@@ -92,6 +92,561 @@
           }
         }
       }
+    },
+    "/api/fsuser/signup": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "會員註冊",
+        "description": "會員註冊",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "type": "object",
+            "required": "true",
+            "description": "會員註冊用",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string",
+                  "example": "example@gmail.com"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "password"
+                }
+              },
+              "required": [
+                "email",
+                "password"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "回傳物件",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "email": {
+                      "type": "string",
+                      "example": "example@gmail.com"
+                    },
+                    "profilePic": {
+                      "type": "string",
+                      "example": "/images/profilePic.jpeg"
+                    },
+                    "_id": {
+                      "type": "string",
+                      "example": "mongoId"
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "example": "2023-04-26T15:47:12.219Z"
+                    },
+                    "updatedAt": {
+                      "type": "string",
+                      "example": "2023-04-26T15:47:12.219Z"
+                    },
+                    "__v": {
+                      "type": "number",
+                      "example": 0
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/fsuser/signin": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "會員登入",
+        "description": "會員登入",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "type": "object",
+            "required": "true",
+            "description": "會員登入用",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string",
+                  "example": "example@gmail.com"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "password"
+                }
+              },
+              "required": [
+                "email",
+                "password"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "回傳成功物件",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string",
+                      "example": "Bearer token"
+                    },
+                    "id": {
+                      "type": "string",
+                      "example": "123456879"
+                    },
+                    "email": {
+                      "type": "string",
+                      "example": "example@gmail.com"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "404": {
+            "description": "密碼錯誤",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "message": {
+                  "type": "string",
+                  "example": "密碼錯誤"
+                },
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 404
+                    },
+                    "isOperational": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/fsuser/checkEmail": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "驗證信箱重複",
+        "description": "驗證信箱重複",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "type": "object",
+            "required": "true",
+            "description": "驗證信箱重複用",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string",
+                  "example": "example@gmail.com"
+                }
+              },
+              "required": [
+                "email"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "回傳物件",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "example@gmail.com 可以使用"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "406": {
+            "description": "回傳物件",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "message": {
+                  "type": "string",
+                  "example": "信箱重複"
+                },
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 406
+                    },
+                    "isOperational": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/fsuser/changePassword": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "修改會員密碼",
+        "description": "修改會員密碼",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "type": "object",
+            "required": "true",
+            "description": "修改會員密碼用",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "password": {
+                  "type": "string",
+                  "example": "password"
+                },
+                "confirmPassword": {
+                  "type": "string",
+                  "example": "password"
+                }
+              },
+              "required": [
+                "password",
+                "confirmPassword"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "回傳物件",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "_id": {
+                      "type": "string",
+                      "example": "644921a5f392998795e9c8ff"
+                    },
+                    "email": {
+                      "type": "string",
+                      "example": "user1@gmail.com"
+                    },
+                    "profilePic": {
+                      "type": "string",
+                      "example": "/images/profilePic.jpeg"
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "example": "2023-04-26T13:05:41.123Z"
+                    },
+                    "updatedAt": {
+                      "type": "string",
+                      "example": "2023-04-26T16:02:43.035Z"
+                    },
+                    "__v": {
+                      "type": "number",
+                      "example": 0
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "402": {
+            "description": "回傳物件",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "message": {
+                  "type": "string",
+                  "example": "密碼不能為空"
+                },
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 402
+                    },
+                    "isOperational": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "406": {
+            "description": "回傳物件",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "message": {
+                  "type": "string",
+                  "example": "密碼不一致"
+                },
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 406
+                    },
+                    "isOperational": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/api/fsuser/getUser": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "取得會員資料",
+        "description": "取得會員資料",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "回傳物件",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "_id": {
+                      "type": "string",
+                      "example": "644921a5f392998795e9c8ff"
+                    },
+                    "email": {
+                      "type": "string",
+                      "example": "user1@gmail.com"
+                    },
+                    "profilePic": {
+                      "type": "string",
+                      "example": "/images/profilePic.jpeg"
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "example": "2023-04-26T13:05:41.123Z"
+                    },
+                    "updatedAt": {
+                      "type": "string",
+                      "example": "2023-04-26T16:02:43.035Z"
+                    },
+                    "__v": {
+                      "type": "number",
+                      "example": 0
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/api/admin/signup": {
+      "post": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "管理員註冊",
+        "description": "管理員註冊",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "回傳範例資料",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "admin"
+                },
+                "email": {
+                  "type": "string",
+                  "example": "admin@gmail.com"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "admin123"
+                },
+                "confirmPassword": {
+                  "type": "string",
+                  "example": "admin123"
+                },
+                "role": {
+                  "type": "string",
+                  "example": "admin"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/login": {
+      "post": {
+        "tags": [
+          "AdminLogin"
+        ],
+        "summary": "管理員登入",
+        "description": "管理員登入",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "回傳範例資料",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "data": {
+                  "type": "string",
+                  "example": "登入成功"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {}
