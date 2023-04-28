@@ -1,24 +1,27 @@
 const hash = require('@/utilities/hash')
-const modelFEuser = require('@/models/modelFEuser')
+const modelMember = require('@/models/modelMember')
 const serviceResponse = require('@/services/serviceResponse')
 const httpCode = require('@/utilities/httpCode')
 
 const serviceJWT = require('@/services/serviceJWT')
 
-const controllerFrontSideUser = {
+const controllerMember = {
   // 註冊
   async signup (req, res, next) {
-    const { password, email } = req.body
+    const { password, email, nickName } = req.body
     const newPassword = await hash.password(password)
     const data = {
       email,
-      password: newPassword
+      password: newPassword,
+      nickName
     }
-    const checkUser = await modelFEuser.findOne({ email: data.email })
+    const checkUser = await modelMember.findOne({ email: data.email })
     if (checkUser !== null) {
       return next(serviceResponse.error(httpCode.NOT_ACCEPTABLE, '帳號已被使用'))
     }
-    const result = await modelFEuser.create(data)
+    const createRes = await modelMember.create(data)
+    const signinToken = serviceJWT.generateJWT(createRes)
+    const result = { token: `Bearer ${signinToken}`, createRes }
     return result
   },
   // 登入
@@ -30,21 +33,20 @@ const controllerFrontSideUser = {
     if (!userData.email || !userData.password) {
       return next(serviceResponse.error(httpCode.PAYMENT_REQUIRED, '帳號密碼必填'))
     }
-    const dbRes = await modelFEuser.findOne({ email: userData.email }).select('+password')
-    if (dbRes === null) {
+    const signinRes = await modelMember.findOne({ email: userData.email }).select('+password')
+    if (signinRes === null) {
       return next(serviceResponse.error(httpCode.NOT_FOUND, '帳號不存在'))
     }
-    const compaire = await hash.compaire(userData.password, dbRes.password)
+    const compaire = await hash.compaire(userData.password, signinRes.password)
     if (!compaire) {
       return next(serviceResponse.error(httpCode.NOT_FOUND, '密碼錯誤'))
     }
 
-    const signinToken = serviceJWT.generateJWT(dbRes)
-
+    const signinToken = serviceJWT.generateJWT(signinRes)
+    signinRes.password = null
     const authData = {
       token: `Bearer ${signinToken}`,
-      id: dbRes.id,
-      email: dbRes.email
+      signinRes
     }
 
     return authData
@@ -61,7 +63,7 @@ const controllerFrontSideUser = {
       next(serviceResponse.error(httpCode.NOT_ACCEPTABLE, '密碼不一致'))
     }
     const newPassword = await hash.password(password)
-    const editUser = await modelFEuser.findByIdAndUpdate(user, { password: newPassword }, { returnDocument: 'after', runValidators: true })
+    const editUser = await modelMember.findByIdAndUpdate(user, { password: newPassword }, { returnDocument: 'after', runValidators: true })
 
     return editUser
   },
@@ -69,7 +71,7 @@ const controllerFrontSideUser = {
   async checkEmail (req, res, next) {
     const { email } = req.body
     const data = { email }
-    const checkUser = await modelFEuser.findOne({ email: data.email })
+    const checkUser = await modelMember.findOne({ email: data.email })
     if (checkUser !== null) {
       return next(serviceResponse.error(httpCode.NOT_ACCEPTABLE, '信箱重複'))
     }
@@ -84,9 +86,15 @@ const controllerFrontSideUser = {
   async getUser (req, res, next) {
     // 從jwt取得使用者id
     const { user } = req
-    const UserData = await modelFEuser.findById({ _id: user })
+    const UserData = await modelMember.findById({ _id: user })
     return UserData
+  },
+  // 修改會員資料
+  async updateUser (data) {
+    const { user, nickName, phoneNumber, birthday, profilePic } = data
+    const result = await modelMember.findByIdAndUpdate(user, { nickName, phoneNumber, birthday, profilePic }, { returnDocument: 'after', runValidators: true, new: true })
+    return result
   }
 }
 
-module.exports = controllerFrontSideUser
+module.exports = controllerMember

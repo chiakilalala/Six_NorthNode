@@ -1,6 +1,6 @@
 const { Schema, model } = require('mongoose')
 
-const FSuserSchema = new Schema(
+const memberSchema = new Schema(
   {
     email: { type: String, required: true, trim: true, unique: true },
     password: { type: String, required: true, select: false },
@@ -15,5 +15,5 @@ const FSuserSchema = new Schema(
   { timestamps: true }
 )
 
-const FSuser = model('FSuser', FSuserSchema)
-module.exports = FSuser
+const member = model('member', memberSchema)
+module.exports = member

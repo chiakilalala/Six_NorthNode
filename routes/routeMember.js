@@ -4,7 +4,7 @@ const serviceError = require('@/services/serviceError')
 const serviceResponse = require('@/services/serviceResponse')
 const middlewareAuth = require('@/middlewares/middlewareAuth')
 
-const controllerFrontSideUser = require('@/controllers/controllerFrontSideUser')
+const controllerMember = require('@/controllers/controllerMember')
 
 // 註冊
 router.post('/signup', serviceError.asyncError(async (req, res, next) => {
@@ -20,6 +20,7 @@ router.post('/signup', serviceError.asyncError(async (req, res, next) => {
         schema:{
                 "$email": 'example@gmail.com',
                 "$password": 'password',
+                "$nickName":'nickname',
             }
       }
      * #swagger.responses[200] = {
@@ -27,17 +28,21 @@ router.post('/signup', serviceError.asyncError(async (req, res, next) => {
         schema: {
           "status": true,
           "data": {
-            "email": "example@gmail.com",
-            "profilePic": "/images/profilePic.jpeg",
-            "_id": "mongoId",
-            "createdAt": "2023-04-26T15:47:12.219Z",
-            "updatedAt": "2023-04-26T15:47:12.219Z",
-            "__v": 0
+            "token":"Bearer token",
+            createRes:{
+              "email": "example@gmail.com",
+              "profilePic": "/images/profilePic.jpeg",
+              "nickName": "nickname",
+              "_id": "mongoId",
+              "createdAt": "2023-04-26T15:47:12.219Z",
+              "updatedAt": "2023-04-26T15:47:12.219Z",
+              "__v": 0
+            }
           },
         }
       }
      */
-  const result = await controllerFrontSideUser.signup(req, res, next)
+  const result = await controllerMember.signup(req, res, next)
   serviceResponse.success(res, result)
 })
 )
@@ -92,7 +97,7 @@ router.post('/signin', serviceError.asyncError(async (req, res, next) => {
       }
     }
    */
-  const result = await controllerFrontSideUser.signin(req, res, next)
+  const result = await controllerMember.signin(req, res, next)
   serviceResponse.success(res, result)
 }))
 
@@ -132,7 +137,7 @@ router.post('/checkEmail', serviceError.asyncError(async (req, res, next) => {
       }
     }
    */
-  const result = await controllerFrontSideUser.checkEmail(req, res, next)
+  const result = await controllerMember.checkEmail(req, res, next)
   serviceResponse.success(res, result)
 }))
 
@@ -190,7 +195,7 @@ router.post('/changePassword', middlewareAuth.loginAuth, serviceError.asyncError
       }
     }
    */
-  const result = await controllerFrontSideUser.changePassword(req, res, next)
+  const result = await controllerMember.changePassword(req, res, next)
   serviceResponse.success(res, result)
 }))
 
@@ -216,8 +221,50 @@ router.get('/getUser', middlewareAuth.loginAuth, serviceError.asyncError(async (
       }
     }
    */
-  const result = await controllerFrontSideUser.getUser(req, res, next)
+  const result = await controllerMember.getUser(req, res, next)
   serviceResponse.success(res, result)
 }))
 
+// 修改會員資料
+router.post('/updateUser', middlewareAuth.loginAuth, serviceError.asyncError(async (req, res, next) => {
+  /**
+   * #swagger.tags = ['User']
+   * #swagger.security = [{ 'apiKeyAuth': [] }]
+   * #swagger.summary = '修改會員資料'
+   * #swagger.description = '修改會員資料'
+   * * #swagger.parameters['body'] = {
+      in: 'body',
+      type: 'object',
+      required: 'true',
+      description: '修改會員資料用',
+      schema:{
+              "nickName": '使用者暱稱',
+              "phoneNumber": '0912345678',
+              "birthday":'2020-01-00',
+              "profilePic":'上傳圖片回傳的URL'
+          }
+    }
+    * #swagger.responses[200] = {
+      description: '回傳物件',
+      schema: {
+        "status": true,
+        "data": {
+        "_id": "644921a5f392998795e9c8ff",
+        "email": "user1@gmail.com",
+        "profilePic": "/images/profilePic.jpeg",
+        "birthday": "2020-01-01",
+        "phoneNumber": "0912349878",
+        "createdAt": "2023-04-26T13:05:41.123Z",
+        "updatedAt": "2023-04-26T16:02:43.035Z",
+        "__v": 0
+        },
+      }
+    }
+   */
+  const { nickName, phoneNumber, birthday, profilePic } = req.body
+  const { user } = req
+  const data = { user, nickName, phoneNumber, birthday, profilePic }
+  const result = await controllerMember.updateUser(data)
+  serviceResponse.success(res, result)
+}))
 module.exports = router

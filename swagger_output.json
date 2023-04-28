@@ -93,7 +93,7 @@
         }
       }
     },
-    "/api/fsuser/signup": {
+    "/api/member/signup": {
       "post": {
         "tags": [
           "User"
@@ -117,11 +117,16 @@
                 "password": {
                   "type": "string",
                   "example": "password"
+                },
+                "nickName": {
+                  "type": "string",
+                  "example": "nickname"
                 }
               },
               "required": [
                 "email",
-                "password"
+                "password",
+                "nickName"
               ]
             }
           }
@@ -139,29 +144,42 @@
                 "data": {
                   "type": "object",
                   "properties": {
-                    "email": {
+                    "token": {
                       "type": "string",
-                      "example": "example@gmail.com"
+                      "example": "Bearer token"
                     },
-                    "profilePic": {
-                      "type": "string",
-                      "example": "/images/profilePic.jpeg"
-                    },
-                    "_id": {
-                      "type": "string",
-                      "example": "mongoId"
-                    },
-                    "createdAt": {
-                      "type": "string",
-                      "example": "2023-04-26T15:47:12.219Z"
-                    },
-                    "updatedAt": {
-                      "type": "string",
-                      "example": "2023-04-26T15:47:12.219Z"
-                    },
-                    "__v": {
-                      "type": "number",
-                      "example": 0
+                    "createRes": {
+                      "type": "object",
+                      "properties": {
+                        "email": {
+                          "type": "string",
+                          "example": "example@gmail.com"
+                        },
+                        "profilePic": {
+                          "type": "string",
+                          "example": "/images/profilePic.jpeg"
+                        },
+                        "nickName": {
+                          "type": "string",
+                          "example": "nickname"
+                        },
+                        "_id": {
+                          "type": "string",
+                          "example": "mongoId"
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "example": "2023-04-26T15:47:12.219Z"
+                        },
+                        "updatedAt": {
+                          "type": "string",
+                          "example": "2023-04-26T15:47:12.219Z"
+                        },
+                        "__v": {
+                          "type": "number",
+                          "example": 0
+                        }
+                      }
                     }
                   }
                 }
@@ -174,7 +192,7 @@
         }
       }
     },
-    "/api/fsuser/signin": {
+    "/api/member/signin": {
       "post": {
         "tags": [
           "User"
@@ -275,7 +293,7 @@
         }
       }
     },
-    "/api/fsuser/checkEmail": {
+    "/api/member/checkEmail": {
       "post": {
         "tags": [
           "User"
@@ -363,7 +381,7 @@
         }
       }
     },
-    "/api/fsuser/changePassword": {
+    "/api/member/changePassword": {
       "post": {
         "tags": [
           "User"
@@ -513,7 +531,7 @@
         ]
       }
     },
-    "/api/fsuser/getUser": {
+    "/api/member/getUser": {
       "get": {
         "tags": [
           "User"
@@ -545,6 +563,104 @@
                     "profilePic": {
                       "type": "string",
                       "example": "/images/profilePic.jpeg"
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "example": "2023-04-26T13:05:41.123Z"
+                    },
+                    "updatedAt": {
+                      "type": "string",
+                      "example": "2023-04-26T16:02:43.035Z"
+                    },
+                    "__v": {
+                      "type": "number",
+                      "example": 0
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/api/member/updateUser": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "修改會員資料",
+        "description": "修改會員資料",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "type": "object",
+            "required": "true",
+            "description": "修改會員資料用",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "nickName": {
+                  "type": "string",
+                  "example": "使用者暱稱"
+                },
+                "phoneNumber": {
+                  "type": "string",
+                  "example": "0912345678"
+                },
+                "birthday": {
+                  "type": "string",
+                  "example": "2020-01-00"
+                },
+                "profilePic": {
+                  "type": "string",
+                  "example": "上傳圖片回傳的URL"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "回傳物件",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "_id": {
+                      "type": "string",
+                      "example": "644921a5f392998795e9c8ff"
+                    },
+                    "email": {
+                      "type": "string",
+                      "example": "user1@gmail.com"
+                    },
+                    "profilePic": {
+                      "type": "string",
+                      "example": "/images/profilePic.jpeg"
+                    },
+                    "birthday": {
+                      "type": "string",
+                      "example": "2020-01-01"
+                    },
+                    "phoneNumber": {
+                      "type": "string",
+                      "example": "0912349878"
                     },
                     "createdAt": {
                       "type": "string",

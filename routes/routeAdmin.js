@@ -47,7 +47,6 @@ router.post(
 
     const { name, email, password } = req.body
     const newAdmin = await controllerAdmin.signUp(name, email, password)
-    console.log(newAdmin)
     const token = serviceJWT.generateJWT(newAdmin)
     serviceResponse.success(res, {
       user: newAdmin,

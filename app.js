@@ -18,7 +18,7 @@ const middlewareError = require('@/middlewares/middlewareError')
 // Load routes 請使用 ./ 引入不然 swagger 會找不到
 const routeExample = require('./routes/routeExample') // 引入自訂的 routeExample
 const routeUpload = require('./routes/routeUpload') // 引入自訂的 routeUpload
-const routeFrontSideUser = require('./routes/routeFrontSideUser')
+const routeMember = require('./routes/routeMember')
 const routeAdmin = require('./routes/routeAdmin')
 
 // Set up middleware
@@ -32,7 +32,7 @@ app.use(cors()) // 設定 cors
 // Set up routes 請使用 /api/xxx
 app.use('/api/example', routeExample)
 app.use('/api/upload', routeUpload)
-app.use('/api/fsuser', routeFrontSideUser)
+app.use('/api/member', routeMember)
 app.use('/api-doc', swaggerUi.serve, swaggerUi.setup(swaggerFile)) // 設定 swagger 的路由
 app.use('/api/admin', routeAdmin)
 
