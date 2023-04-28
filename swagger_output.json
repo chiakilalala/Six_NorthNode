@@ -133,7 +133,7 @@
         ],
         "responses": {
           "200": {
-            "description": "回傳物件",
+            "description": "註冊成功",
             "schema": {
               "type": "object",
               "properties": {
@@ -188,6 +188,70 @@
                 "name": "main"
               }
             }
+          },
+          "400": {
+            "description": "email格式錯誤",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "message": {
+                  "type": "string",
+                  "example": "信箱格式錯誤"
+                },
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 400
+                    },
+                    "isOperational": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "402": {
+            "description": "信箱、密碼、暱稱不可空白",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "message": {
+                  "type": "string",
+                  "example": "信箱、密碼、暱稱不可空白"
+                },
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 402
+                    },
+                    "isOperational": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
@@ -227,7 +291,7 @@
         ],
         "responses": {
           "200": {
-            "description": "回傳成功物件",
+            "description": "登入成功",
             "schema": {
               "type": "object",
               "properties": {
@@ -242,13 +306,106 @@
                       "type": "string",
                       "example": "Bearer token"
                     },
-                    "id": {
-                      "type": "string",
-                      "example": "123456879"
+                    "signinRes": {
+                      "type": "object",
+                      "properties": {
+                        "email": {
+                          "type": "string",
+                          "example": "example@gmail.com"
+                        },
+                        "password": {
+                          "type": "string",
+                          "example": "null"
+                        },
+                        "profilePic": {
+                          "type": "string",
+                          "example": "/images/profilePic.jpeg"
+                        },
+                        "nickName": {
+                          "type": "string",
+                          "example": "nickname"
+                        },
+                        "_id": {
+                          "type": "string",
+                          "example": "mongoId"
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "example": "2023-04-26T15:47:12.219Z"
+                        },
+                        "updatedAt": {
+                          "type": "string",
+                          "example": "2023-04-26T15:47:12.219Z"
+                        },
+                        "__v": {
+                          "type": "number",
+                          "example": 0
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "400": {
+            "description": "email格式錯誤",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "message": {
+                  "type": "string",
+                  "example": "信箱格式錯誤"
+                },
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 400
                     },
-                    "email": {
-                      "type": "string",
-                      "example": "example@gmail.com"
+                    "isOperational": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "402": {
+            "description": "帳號或密碼欄位空白",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "message": {
+                  "type": "string",
+                  "example": "帳號密碼必填"
+                },
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 402
+                    },
+                    "isOperational": {
+                      "type": "boolean",
+                      "example": true
                     }
                   }
                 }
@@ -323,7 +480,7 @@
         ],
         "responses": {
           "200": {
-            "description": "回傳物件",
+            "description": "email可以使用",
             "schema": {
               "type": "object",
               "properties": {
@@ -346,8 +503,40 @@
               }
             }
           },
+          "400": {
+            "description": "信箱格式錯誤",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "message": {
+                  "type": "string",
+                  "example": "信箱格式錯誤"
+                },
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 400
+                    },
+                    "isOperational": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
           "406": {
-            "description": "回傳物件",
+            "description": "信箱重複",
             "schema": {
               "type": "object",
               "properties": {
@@ -464,7 +653,7 @@
             }
           },
           "402": {
-            "description": "回傳物件",
+            "description": "密碼不能為空",
             "schema": {
               "type": "object",
               "properties": {
@@ -496,7 +685,7 @@
             }
           },
           "406": {
-            "description": "回傳物件",
+            "description": "密碼不一致",
             "schema": {
               "type": "object",
               "properties": {
@@ -545,7 +734,7 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": "回傳物件",
+            "description": "取得會員資料",
             "schema": {
               "type": "object",
               "properties": {
@@ -635,7 +824,7 @@
         ],
         "responses": {
           "200": {
-            "description": "回傳物件",
+            "description": "修改會員資料",
             "schema": {
               "type": "object",
               "properties": {

@@ -11,39 +11,62 @@ const controllerMember = require('@/controllers/controllerMember')
 // 註冊
 router.post('/signup', serviceError.asyncError(async (req, res, next) => {
   /**
-     * #swagger.tags = ['User']
-     * #swagger.summary = '會員註冊'
-     * #swagger.description = '會員註冊'
-     * #swagger.parameters['body'] = {
-        in: 'body',
-        type: 'object',
-        required: 'true',
-        description: '會員註冊用',
-        schema:{
-                "$email": 'example@gmail.com',
-                "$password": 'password',
-                "$nickName":'nickname',
-            }
+   * #swagger.tags = ['User']
+   * #swagger.summary = '會員註冊'
+   * #swagger.description = '會員註冊'
+   * #swagger.parameters['body'] = {
+      in: 'body',
+      type: 'object',
+      required: 'true',
+      description: '會員註冊用',
+      schema:{
+              "$email": 'example@gmail.com',
+              "$password": 'password',
+              "$nickName":'nickname',
+          }
+    }
+   * #swagger.responses[200] = {
+      description: '註冊成功',
+      schema: {
+        "status": true,
+        "data": {
+          "token": "Bearer token",
+          "createRes":{
+            "email": "example@gmail.com",
+            "profilePic": "/images/profilePic.jpeg",
+            "nickName": "nickname",
+            "_id": "mongoId",
+            "createdAt": "2023-04-26T15:47:12.219Z",
+            "updatedAt": "2023-04-26T15:47:12.219Z",
+            "__v": 0
+          }
+        },
       }
-     * #swagger.responses[200] = {
-        description: '回傳物件',
-        schema: {
-          "status": true,
-          "data": {
-            "token":"Bearer token",
-            createRes:{
-              "email": "example@gmail.com",
-              "profilePic": "/images/profilePic.jpeg",
-              "nickName": "nickname",
-              "_id": "mongoId",
-              "createdAt": "2023-04-26T15:47:12.219Z",
-              "updatedAt": "2023-04-26T15:47:12.219Z",
-              "__v": 0
-            }
-          },
-        }
+    }
+    * #swagger.responses[402] = {
+      description: '信箱、密碼、暱稱不可空白',
+      schema: {
+        "status": false,
+        "message": "信箱、密碼、暱稱不可空白",
+        "error": {
+          "statusCode": 402,
+          "isOperational": true
+        },
       }
-     */
+    }
+    * #swagger.responses[400] = {
+      description: 'email格式錯誤',
+      schema: {
+        "status": false,
+        "message": "信箱格式錯誤",
+        "error": {
+          "statusCode": 400,
+          "isOperational": true
+        },
+      }
+    }
+   */
+
   const { email, password, nickName } = req.body
 
   if (!email || !password || !nickName) {
@@ -76,13 +99,43 @@ router.post('/signin', serviceError.asyncError(async (req, res, next) => {
           }
     }
    * #swagger.responses[200] = {
-      description: '回傳成功物件',
+      description: '登入成功',
       schema: {
         "status": true,
         "data": {
           "token": "Bearer token",
-          "id":"123456879",
-          "email": "example@gmail.com"
+          "signinRes":{
+            "email": "example@gmail.com",
+            "password": "null",
+            "profilePic": "/images/profilePic.jpeg",
+            "nickName": "nickname",
+            "_id": "mongoId",
+            "createdAt": "2023-04-26T15:47:12.219Z",
+            "updatedAt": "2023-04-26T15:47:12.219Z",
+            "__v": 0
+          }
+        },
+      }
+    }
+    * #swagger.responses[402] = {
+      description: '帳號或密碼欄位空白',
+      schema: {
+        "status": false,
+        "message": "帳號密碼必填",
+        "error": {
+          "statusCode": 402,
+          "isOperational": true
+        },
+      }
+    }
+    * #swagger.responses[400] = {
+      description: 'email格式錯誤',
+      schema: {
+        "status": false,
+        "message": "信箱格式錯誤",
+        "error": {
+          "statusCode": 400,
+          "isOperational": true
         },
       }
     }
@@ -138,7 +191,7 @@ router.post('/checkEmail', serviceError.asyncError(async (req, res, next) => {
           }
     }
     * #swagger.responses[200] = {
-      description: '回傳物件',
+      description: 'email可以使用',
       schema: {
         "status": true,
         "data": {
@@ -146,8 +199,19 @@ router.post('/checkEmail', serviceError.asyncError(async (req, res, next) => {
         },
       }
     }
+    * #swagger.responses[400] = {
+      description: '信箱格式錯誤',
+      schema: {
+        "status": false,
+        "message": "信箱格式錯誤",
+        "error": {
+        "statusCode": 400,
+        "isOperational": true
+        },
+      }
+    }
     * #swagger.responses[406] = {
-      description: '回傳物件',
+      description: '信箱重複',
       schema: {
         "status": false,
         "message": "信箱重複",
@@ -201,7 +265,7 @@ router.post('/changePassword', middlewareAuth.loginAuth, serviceError.asyncError
       }
     }
     * #swagger.responses[406] = {
-      description: '回傳物件',
+      description: '密碼不一致',
       schema: {
         "status": false,
         "message": "密碼不一致",
@@ -212,7 +276,7 @@ router.post('/changePassword', middlewareAuth.loginAuth, serviceError.asyncError
       }
     }
     * #swagger.responses[402] = {
-      description: '回傳物件',
+      description: '密碼不能為空',
       schema: {
         "status": false,
         "message": "密碼不能為空",
@@ -246,7 +310,7 @@ router.get('/getUser', middlewareAuth.loginAuth, serviceError.asyncError(async (
    * #swagger.summary = '取得會員資料'
    * #swagger.description = '取得會員資料'
     * #swagger.responses[200] = {
-      description: '回傳物件',
+      description: '取得會員資料',
       schema: {
         "status": true,
         "data": {
@@ -286,7 +350,7 @@ router.post('/updateUser', middlewareAuth.loginAuth, serviceError.asyncError(asy
           }
     }
     * #swagger.responses[200] = {
-      description: '回傳物件',
+      description: '修改會員資料',
       schema: {
         "status": true,
         "data": {
