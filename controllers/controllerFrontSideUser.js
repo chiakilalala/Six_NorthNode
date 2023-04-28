@@ -28,7 +28,7 @@ const controllerFrontSideUser = {
       email, password
     }
     if (!userData.email || !userData.password) {
-      return next(serviceResponse.error(400, '帳號密碼必填'))
+      return next(serviceResponse.error(httpCode.PAYMENT_REQUIRED, '帳號密碼必填'))
     }
     const dbRes = await modelFEuser.findOne({ email: userData.email }).select('+password')
     if (dbRes === null) {
