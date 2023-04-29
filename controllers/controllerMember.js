@@ -20,24 +20,29 @@ const controllerMember = {
     }
     const createRes = await modelMember.create(data)
     const signinToken = serviceJWT.generateJWT(createRes)
-    const result = { token: `Bearer ${signinToken}`, createRes }
+    const result = { token: signinToken, createRes }
     return result
   },
   // 登入
   async signin (email, password, next) {
     const signinRes = await modelMember.findOne({ email }).select('+password')
+
     if (signinRes === null) {
       return next(serviceResponse.error(httpCode.NOT_FOUND, '帳號不存在'))
     }
+
     const compare = await hash.compare(password, signinRes.password)
+
     if (!compare) {
       return next(serviceResponse.error(httpCode.NOT_FOUND, '密碼錯誤'))
     }
 
     const signinToken = serviceJWT.generateJWT(signinRes)
+
     signinRes.password = null
+
     const authData = {
-      token: `Bearer ${signinToken}`,
+      token: signinToken,
       signinRes
     }
 

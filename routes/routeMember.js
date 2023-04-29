@@ -30,7 +30,7 @@ router.post('/signup', serviceError.asyncError(async (req, res, next) => {
       schema: {
         "status": true,
         "data": {
-          "token": "Bearer token",
+          "token": "token",
           "createRes":{
             "email": "example@gmail.com",
             "profilePic": "/images/profilePic.jpeg",
@@ -103,7 +103,7 @@ router.post('/signin', serviceError.asyncError(async (req, res, next) => {
       schema: {
         "status": true,
         "data": {
-          "token": "Bearer token",
+          "token": "token",
           "signinRes":{
             "email": "example@gmail.com",
             "password": "null",
