@@ -314,12 +314,15 @@ router.get('/getUser', middlewareAuth.loginAuth, serviceError.asyncError(async (
       schema: {
         "status": true,
         "data": {
-        "_id": "644921a5f392998795e9c8ff",
-        "email": "user1@gmail.com",
-        "profilePic": "/images/profilePic.jpeg",
-        "createdAt": "2023-04-26T13:05:41.123Z",
-        "updatedAt": "2023-04-26T16:02:43.035Z",
-        "__v": 0
+          "_id": "644cce67945042a407ed1c21",
+          "email": "z2@gmail.com",
+          "nickName": "使用者暱稱",
+          "profilePic": "",
+          "createdAt": "2023-04-29T07:59:35.033Z",
+          "updatedAt": "2023-04-29T08:08:39.850Z",
+          "__v": 0,
+          "birthday": "2022-02-03T00:00:00.000Z",
+          "phoneNumber": "0912345678"
         },
       }
     }
@@ -345,7 +348,7 @@ router.post('/updateUser', middlewareAuth.loginAuth, serviceError.asyncError(asy
       schema:{
               "nickName": '使用者暱稱',
               "phoneNumber": '0912345678',
-              "birthday":'2020-01-00',
+              "birthday":'Sat Apr 29 2023 16:20:13 GMT+0800 (台北標準時間)',
               "profilePic":'上傳圖片回傳的URL'
           }
     }
@@ -354,14 +357,15 @@ router.post('/updateUser', middlewareAuth.loginAuth, serviceError.asyncError(asy
       schema: {
         "status": true,
         "data": {
-        "_id": "644921a5f392998795e9c8ff",
-        "email": "user1@gmail.com",
-        "profilePic": "/images/profilePic.jpeg",
-        "birthday": "2020-01-01",
-        "phoneNumber": "0912349878",
-        "createdAt": "2023-04-26T13:05:41.123Z",
-        "updatedAt": "2023-04-26T16:02:43.035Z",
-        "__v": 0
+          "_id": "644cce67945042a407ed1c21",
+          "email": "z2@gmail.com",
+          "nickName": "使用者暱稱",
+          "profilePic": "上傳圖片回傳的URL",
+          "createdAt": "2023-04-29T07:59:35.033Z",
+          "updatedAt": "2023-04-29T08:14:38.516Z",
+          "__v": 0,
+          "birthday": "2023-04-29T08:14:30.000Z",
+          "phoneNumber": "0912345678"
         },
       }
     }

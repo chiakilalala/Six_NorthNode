@@ -1,14 +1,10 @@
 const serviceResponse = require('@/services/serviceResponse')
+const serviceError = require('@/services/serviceError')
 const httpCode = require('@/utilities/httpCode')
 const serviceJWT = require('@/services/serviceJWT')
 
 const middlewareAuth = {
-  /**
-     * #swagger.tags = ['Auth']
-     * #swagger.summary = '驗證用中介軟體'
-     * #swagger.description = '驗證用中介軟體'
-     */
-  async loginAuth (req, res, next) {
+  loginAuth: serviceError.asyncError(async (req, res, next) => {
     let token
 
     if (!token) {
@@ -26,7 +22,7 @@ const middlewareAuth = {
     const decoded = await serviceJWT.decode(token)
     req.user = decoded.id
     next()
-  }
+  })
 }
 
 module.exports = middlewareAuth

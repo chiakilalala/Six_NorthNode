@@ -6,7 +6,7 @@ const hash = {
     const hashedPassword = await bcrypt.hash(password, salt)
     return hashedPassword
   },
-  async compaire (password, dbPassword) {
+  async compare (password, dbPassword) {
     const result = await bcrypt.compare(password, dbPassword)
     return result
   }

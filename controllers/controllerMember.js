@@ -29,8 +29,8 @@ const controllerMember = {
     if (signinRes === null) {
       return next(serviceResponse.error(httpCode.NOT_FOUND, '帳號不存在'))
     }
-    const compaire = await hash.compaire(password, signinRes.password)
-    if (!compaire) {
+    const compare = await hash.compare(password, signinRes.password)
+    if (!compare) {
       return next(serviceResponse.error(httpCode.NOT_FOUND, '密碼錯誤'))
     }
 
