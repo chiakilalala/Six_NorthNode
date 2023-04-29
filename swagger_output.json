@@ -618,31 +618,39 @@
                   "properties": {
                     "_id": {
                       "type": "string",
-                      "example": "644921a5f392998795e9c8ff"
+                      "example": "644cce67945042a407ed1c21"
                     },
                     "email": {
                       "type": "string",
-                      "example": "user1@gmail.com"
+                      "example": "z2@gmail.com"
                     },
                     "nickName": {
                       "type": "string",
-                      "example": "使用者暱稱"
+                      "example": "aaa"
                     },
                     "profilePic": {
                       "type": "string",
-                      "example": "/images/profilePic.jpeg"
+                      "example": "上傳圖片回傳的URL"
                     },
                     "createdAt": {
                       "type": "string",
-                      "example": "2023-04-26T13:05:41.123Z"
+                      "example": "2023-04-29T07:59:35.033Z"
                     },
                     "updatedAt": {
                       "type": "string",
-                      "example": "2023-04-26T16:02:43.035Z"
+                      "example": "2023-04-29T08:36:48.175Z"
                     },
                     "__v": {
                       "type": "number",
                       "example": 0
+                    },
+                    "birthday": {
+                      "type": "string",
+                      "example": "2023-04-29T08:20:13.000Z"
+                    },
+                    "phoneNumber": {
+                      "type": "string",
+                      "example": "0912345678"
                     }
                   }
                 }

@@ -254,13 +254,15 @@ router.post('/changePassword', middlewareAuth.loginAuth, serviceError.asyncError
       schema: {
         "status": true,
         "data": {
-        "_id": "644921a5f392998795e9c8ff",
-        "email": "user1@gmail.com",
-        "nickName": "使用者暱稱",
-        "profilePic": "/images/profilePic.jpeg",
-        "createdAt": "2023-04-26T13:05:41.123Z",
-        "updatedAt": "2023-04-26T16:02:43.035Z",
-        "__v": 0
+          "_id": "644cce67945042a407ed1c21",
+           "email": "z2@gmail.com",
+           "nickName": "aaa",
+           "profilePic": "上傳圖片回傳的URL",
+           "createdAt": "2023-04-29T07:59:35.033Z",
+           "updatedAt": "2023-04-29T08:36:48.175Z",
+           "__v": 0,
+           "birthday": "2023-04-29T08:20:13.000Z",
+           "phoneNumber": "0912345678"
         },
       }
     }
