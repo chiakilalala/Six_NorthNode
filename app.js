@@ -6,7 +6,7 @@ const logger = require('morgan')
 const cors = require('cors')
 const serviceDB = require('@/services/serviceDB') // 引入自訂的 serviceDB
 const swaggerUi = require('swagger-ui-express') // 引入 swagger-ui-express
-const swaggerFile = require('@/swagger_output.json')
+const swaggerFile = require('./swagger_output.json')
 
 // 引入 swagger 的 json 檔案
 const app = express() // 建立 express 的實體
@@ -18,6 +18,7 @@ const middlewareError = require('@/middlewares/middlewareError')
 // Load routes 請使用 ./ 引入不然 swagger 會找不到
 const routeExample = require('./routes/routeExample') // 引入自訂的 routeExample
 const routeUpload = require('./routes/routeUpload') // 引入自訂的 routeUpload
+const routeMember = require('./routes/routeMember')
 const routeAdmin = require('./routes/routeAdmin')
 const routeMovie = require('./routes/routeMovie')
 
@@ -32,6 +33,7 @@ app.use(cors()) // 設定 cors
 // Set up routes 請使用 /api/xxx
 app.use('/api/example', routeExample)
 app.use('/api/upload', routeUpload)
+app.use('/api/member', routeMember)
 app.use('/api/admin', routeAdmin)
 app.use('/api/movie', routeMovie)
 app.use('/api-doc', swaggerUi.serve, swaggerUi.setup(swaggerFile)) // 設定 swagger 的路由
