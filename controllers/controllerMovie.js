@@ -29,7 +29,36 @@ const controllerMovie = {
       createTime
     })
     return newMovie
+  },
+  async getMovies (isRelease, name) {
+    let movies = []
+
+    if (isRelease !== undefined) {
+      if (isRelease) {
+      // filter by release date ( on or before today)
+        movies = await Movie.find({
+          name: { $regex: name, $options: 'i' },
+          releaseData: { $lte: new Date() }
+        })
+      } else {
+      // filter by release date (after today)
+        movies = await Movie.find({
+          name: { $regex: name, $options: 'i' },
+          releaseData: { $gt: new Date() }
+        })
+      }
+    } else if (name !== '') {
+    // fuzzy search
+      movies = await Movie.find({
+        name: { $regex: name, $options: 'i' }
+      })
+    } else {
+    // return all movies
+      movies = await Movie.find()
+    }
+    return movies
   }
+
 }
 
 module.exports = controllerMovie
