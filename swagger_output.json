@@ -54,45 +54,6 @@
         }
       }
     },
-    "/api/upload/image": {
-      "post": {
-        "tags": [
-          "Upload"
-        ],
-        "summary": "上傳圖片",
-        "description": "上傳圖片",
-        "parameters": [
-          {
-            "name": "image",
-            "in": "formData",
-            "type": "file",
-            "required": "false",
-            "description": "Some description..."
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "回傳URL",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "status": {
-                  "type": "boolean",
-                  "example": true
-                },
-                "data": {
-                  "type": "string",
-                  "example": "{ fileUrl:'xxx' }"
-                }
-              },
-              "xml": {
-                "name": "main"
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/member/signup": {
       "post": {
         "tags": [
@@ -1181,11 +1142,8 @@
         "description": "獲取電影列表",
         "parameters": [
           {
-            "name": "isRelease",
-            "in": "query",
-            "description": "是否上檔",
-            "type": "boolean",
-            "default": true
+            "name": "isRelease\r",
+            "in": "query"
           },
           {
             "name": "name",
@@ -1193,6 +1151,13 @@
             "description": "電影名稱模糊搜尋",
             "type": "string",
             "default": "鋼鐵人"
+          },
+          {
+            "name": "isRelease",
+            "description": "是否上檔",
+            "type": "boolean",
+            "default": true,
+            "in": "query"
           }
         ],
         "responses": {
