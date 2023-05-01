@@ -8,8 +8,9 @@ const controllerAdmin = {
     const Passwordbcrypt = await bcrypt.hash(password, 12) // 密碼加密
     const findAdmin = await Admin.findOne({ email })
     if (findAdmin) {
-      return serviceResponse.error(httpCode.BAD_REQUEST, '此E-mail已經註冊')
+      throw serviceResponse.error(httpCode.BAD_REQUEST, '此E-mail已經註冊')
     }
+
     const newAdmin = await Admin.create({
       name, email, password: Passwordbcrypt, role: 'admin' // 預設設定為管理員角色
 
