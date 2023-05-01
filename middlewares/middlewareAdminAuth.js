@@ -17,7 +17,7 @@ const middlewareAdminAuth = serviceError.asyncError(async (req, res, next) => {
   }
 
   if (!token) {
-    return serviceResponse.error(400, '沒有權限', next)
+    return serviceResponse.error(httpCode.UNAUTHORIZED, '沒有權限', next)
   }
   // 驗證 token 正確性
   const decode = await serviceJWT.decode(token)
@@ -25,7 +25,7 @@ const middlewareAdminAuth = serviceError.asyncError(async (req, res, next) => {
   const currentUser = await Admin.findById(decode.id)
   // If no user is found, return an error
   if (!currentUser) {
-    serviceResponse.error(400, '沒有權限', next)
+    serviceResponse.error(httpCode.UNAUTHORIZED, '沒有權限', next)
   }
   // Set the user in the request object
   req.user = currentUser

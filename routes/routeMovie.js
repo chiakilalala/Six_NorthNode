@@ -15,9 +15,26 @@ router.post(
       serviceResponse.error(httpCode.BAD_REQUEST, '欄位不可為空', next)
     }
     /**
-     * #swagger.tags = ['Post']
+     * #swagger.tags = ['Movie']
      * #swagger.summary = '新增電影資訊'
      * #swagger.description = '新增電影資訊'
+     * #swagger.parameters['body'] = {
+        in: 'body',
+        type: 'object',
+        required: 'true',
+        description: '會員註冊用',
+        schema:{
+                "$name": '鋼鐵人',
+                "$imgs": ['url'],
+                "$level": 1,
+                "$desc":'一個神隱少女的故事',
+                "time": 180,
+                "actors": ["string"],
+                "videos": ["string"],
+                "status": 1,
+                "releaseData": "2023-05-01"
+        }
+      }
      * #swagger.responses[200] = {
         description: '回傳範例資料',
         schema: {
@@ -52,7 +69,7 @@ router.get(
   '/',
   serviceError.asyncError(async (req, res, next) => {
     /**
-     * #swagger.tags = ['獲取電影列表']
+     * #swagger.tags = ['Movie']
      * #swagger.summary = '獲取電影列表'
      * #swagger.description = '獲取電影列表'
      * #swagger.parameters['isRelease'] = { description: '是否上檔', type: 'boolean', default: true }

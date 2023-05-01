@@ -54,6 +54,45 @@
         }
       }
     },
+    "/api/upload/image": {
+      "post": {
+        "tags": [
+          "Upload"
+        ],
+        "summary": "上傳圖片",
+        "description": "上傳圖片",
+        "parameters": [
+          {
+            "name": "image",
+            "in": "formData",
+            "type": "file",
+            "required": "false",
+            "description": "Some description..."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "回傳URL",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "data": {
+                  "type": "string",
+                  "example": "{ fileUrl:'xxx' }"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/member/signup": {
       "post": {
         "tags": [
@@ -945,11 +984,71 @@
     "/api/movie/": {
       "post": {
         "tags": [
-          "Post"
+          "Movie"
         ],
         "summary": "新增電影資訊",
         "description": "新增電影資訊",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "type": "object",
+            "required": "true",
+            "description": "會員註冊用",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "鋼鐵人"
+                },
+                "$imgs": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "level": {
+                  "type": "number",
+                  "example": 1
+                },
+                "desc": {
+                  "type": "string",
+                  "example": "一個神隱少女的故事"
+                },
+                "time": {
+                  "type": "number",
+                  "example": 180
+                },
+                "actors": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "videos": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "status": {
+                  "type": "number",
+                  "example": 1
+                },
+                "releaseData": {
+                  "type": "string",
+                  "example": "2023-05-01"
+                }
+              },
+              "required": [
+                "name",
+                "level",
+                "desc"
+              ]
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "回傳範例資料",
@@ -1008,14 +1107,17 @@
       },
       "get": {
         "tags": [
-          "獲取電影列表"
+          "Movie"
         ],
         "summary": "獲取電影列表",
         "description": "獲取電影列表",
         "parameters": [
           {
-            "name": "isRelease\r",
-            "in": "query"
+            "name": "isRelease",
+            "in": "query",
+            "description": "是否上檔",
+            "type": "boolean",
+            "default": true
           },
           {
             "name": "name",
@@ -1023,13 +1125,6 @@
             "description": "電影名稱模糊搜尋",
             "type": "string",
             "default": "鋼鐵人"
-          },
-          {
-            "name": "isRelease",
-            "description": "是否上檔",
-            "type": "boolean",
-            "default": true,
-            "in": "query"
           }
         ],
         "responses": {
