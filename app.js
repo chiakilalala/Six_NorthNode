@@ -20,6 +20,7 @@ const routeExample = require('./routes/routeExample') // 引入自訂的 routeEx
 const routeUpload = require('./routes/routeUpload') // 引入自訂的 routeUpload
 const routeMember = require('./routes/routeMember')
 const routeAdmin = require('./routes/routeAdmin')
+const routeMovie = require('./routes/routeMovie')
 
 // Set up middleware
 app.use(logger('dev')) // 設定 morgan 的 logger，可以在 server 端看到請求的細節
@@ -33,8 +34,9 @@ app.use(cors()) // 設定 cors
 app.use('/api/example', routeExample)
 app.use('/api/upload', routeUpload)
 app.use('/api/member', routeMember)
-app.use('/api-doc', swaggerUi.serve, swaggerUi.setup(swaggerFile)) // 設定 swagger 的路由
 app.use('/api/admin', routeAdmin)
+app.use('/api/movie', routeMovie)
+app.use('/api-doc', swaggerUi.serve, swaggerUi.setup(swaggerFile)) // 設定 swagger 的路由
 
 // Set up error handling
 app.use(middlewareError) // 設定錯誤處理
