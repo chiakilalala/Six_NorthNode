@@ -48,4 +48,49 @@ router.post(
   })
 )
 
+router.get(
+  '/',
+  serviceError.asyncError(async (req, res, next) => {
+    /**
+     * #swagger.tags = ['獲取電影列表']
+     * #swagger.summary = '獲取電影列表'
+     * #swagger.description = '獲取電影列表'
+     * #swagger.parameters['isRelease'] = { description: '是否上檔', type: 'boolean', default: true }
+     * #swagger.parameters['name'] = { description: '電影名稱模糊搜尋', type: 'string', default: '鋼鐵人' }
+     * #swagger.responses[200] = {
+        description: '回傳範例資料',
+        schema: {
+          "status": true,
+          "data": [
+            {
+              "id": 1,
+              "name": '鋼鐵人',
+              "imgs": ["https://example.com/img1.jpg"],
+              "level": 0,
+              "desc": 'string',
+              "time": 90,
+              "actors": ['jason', 'vivian', 'echo'],
+              "videos": ['https://example.com/video1.mp4'],
+              "status": 1,
+              "release_data": 'yymmdd-hms'
+            }
+          ],
+        }
+      }
+     */
+
+    try {
+      const isRelease = req.query.isRelease
+      const name = req.query.name || ''
+      const movies = await controllerMovie.getMovies(isRelease, name)
+      serviceResponse.success(res, {
+        isRelease,
+        data: movies
+      })
+    } catch (error) {
+      console.error(error)
+      serviceResponse.error(res, 'Something went wrong.', 500)
+    }
+  })
+)
 module.exports = router
