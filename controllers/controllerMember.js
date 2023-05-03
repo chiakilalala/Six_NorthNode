@@ -7,7 +7,7 @@ const serviceJWT = require('@/services/serviceJWT')
 
 const controllerMember = {
   // 註冊
-  async signup ({ password, email, nickName }, next) {
+  async signup ({ password, email, nickName }) {
     const newPassword = await hash.password(password)
     const data = {
       email,
@@ -24,7 +24,7 @@ const controllerMember = {
     return result
   },
   // 登入
-  async signin (email, password, next) {
+  async signin (email, password) {
     const signinRes = await modelMember.findOne({ email }).select('+password')
 
     if (signinRes === null) {
@@ -56,7 +56,7 @@ const controllerMember = {
     return editPassword
   },
   // 確認信箱是否重複
-  async checkEmail (email, next) {
+  async checkEmail (email) {
     const checkUser = await modelMember.findOne({ email })
     if (checkUser !== null) {
       throw serviceResponse.error(httpCode.NOT_ACCEPTABLE, '該信箱已被註冊')

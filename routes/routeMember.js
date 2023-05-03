@@ -103,7 +103,7 @@ router.post('/signup', serviceError.asyncError(async (req, res, next) => {
     throw serviceResponse.error(httpCode.BAD_REQUEST, '密碼長度至少8位、須包含數字與英文')
   }
 
-  const result = await controllerMember.signup({ password, email, nickName }, next)
+  const result = await controllerMember.signup({ password, email, nickName })
   serviceResponse.success(res, result)
 })
 )
@@ -197,7 +197,7 @@ router.post('/signin', serviceError.asyncError(async (req, res, next) => {
     throw serviceResponse.error(httpCode.BAD_REQUEST, '信箱格式錯誤')
   }
 
-  const result = await controllerMember.signin(email, password, next)
+  const result = await controllerMember.signin(email, password)
   serviceResponse.success(res, result)
 }))
 
@@ -254,7 +254,7 @@ router.post('/checkEmail', serviceError.asyncError(async (req, res, next) => {
     throw serviceResponse.error(httpCode.BAD_REQUEST, '信箱格式錯誤')
   }
 
-  const result = await controllerMember.checkEmail(email, next)
+  const result = await controllerMember.checkEmail(email)
   serviceResponse.success(res, result)
 }))
 
