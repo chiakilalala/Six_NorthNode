@@ -190,11 +190,11 @@ router.post('/signin', serviceError.asyncError(async (req, res, next) => {
    */
   const { email, password } = req.body
   if (!email || !password) {
-    serviceResponse.error(httpCode.PAYMENT_REQUIRED, '帳號密碼必填', next)
+    return serviceResponse.error(httpCode.PAYMENT_REQUIRED, '帳號密碼必填', next)
   }
 
   if (!validator.isEmail(email)) {
-    serviceResponse.error(httpCode.BAD_REQUEST, '信箱格式錯誤', next)
+    return serviceResponse.error(httpCode.BAD_REQUEST, '信箱格式錯誤', next)
   }
 
   const result = await controllerMember.signin(email, password, next)
@@ -251,7 +251,7 @@ router.post('/checkEmail', serviceError.asyncError(async (req, res, next) => {
   const { email } = req.body
 
   if (!validator.isEmail(email)) {
-    serviceResponse.error(httpCode.BAD_REQUEST, '信箱格式錯誤', next)
+    return serviceResponse.error(httpCode.BAD_REQUEST, '信箱格式錯誤', next)
   }
 
   const result = await controllerMember.checkEmail(email, next)
