@@ -92,15 +92,15 @@ router.post('/signup', serviceError.asyncError(async (req, res, next) => {
   const { email, password, nickName } = req.body
 
   if (!email || !password || !nickName) {
-    throw serviceResponse.error(httpCode.PAYMENT_REQUIRED, '信箱、密碼、暱稱不可空白', next)
+    throw serviceResponse.error(httpCode.PAYMENT_REQUIRED, '信箱、密碼、暱稱不可空白')
   }
 
   if (!validator.isEmail(email)) {
-    throw serviceResponse.error(httpCode.BAD_REQUEST, '信箱格式錯誤', next)
+    throw serviceResponse.error(httpCode.BAD_REQUEST, '信箱格式錯誤')
   }
 
   if (!validator.isStrongPassword(password, { minLength: 8, minSymbols: 0, minUppercase: 0 })) {
-    throw serviceResponse.error(httpCode.BAD_REQUEST, '密碼長度至少8位、須包含數字與英文', next)
+    throw serviceResponse.error(httpCode.BAD_REQUEST, '密碼長度至少8位、須包含數字與英文')
   }
 
   const result = await controllerMember.signup({ password, email, nickName }, next)
@@ -190,11 +190,11 @@ router.post('/signin', serviceError.asyncError(async (req, res, next) => {
    */
   const { email, password } = req.body
   if (!email || !password) {
-    throw serviceResponse.error(httpCode.PAYMENT_REQUIRED, '帳號密碼必填', next)
+    throw serviceResponse.error(httpCode.PAYMENT_REQUIRED, '帳號密碼必填')
   }
 
   if (!validator.isEmail(email)) {
-    throw serviceResponse.error(httpCode.BAD_REQUEST, '信箱格式錯誤', next)
+    throw serviceResponse.error(httpCode.BAD_REQUEST, '信箱格式錯誤')
   }
 
   const result = await controllerMember.signin(email, password, next)
@@ -251,7 +251,7 @@ router.post('/checkEmail', serviceError.asyncError(async (req, res, next) => {
   const { email } = req.body
 
   if (!validator.isEmail(email)) {
-    throw serviceResponse.error(httpCode.BAD_REQUEST, '信箱格式錯誤', next)
+    throw serviceResponse.error(httpCode.BAD_REQUEST, '信箱格式錯誤')
   }
 
   const result = await controllerMember.checkEmail(email, next)
