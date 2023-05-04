@@ -43,6 +43,26 @@ const controllerMovie = {
     }
     const result = await Movie.find(query)
     return result
+  },
+
+  async updateMovie (id, name, level, desc, releaseData) {
+    const MovieId = await Movie.findById(id)
+    if (MovieId === null) {
+      serviceResponse.error(httpCode.BAD_REQUEST, '貼文id不存在')
+    }
+    const updatedMovie = await Movie.findByIdAndUpdate(
+      id, {
+        name,
+        level,
+        desc,
+        releaseData
+      }, { new: true, returnDocument: 'after' })
+
+    return updatedMovie
+  },
+  async deleteOneMovie (id, name, level, desc, releaseData) {
+    const deleteMove = await Movie.findByIdAndDelete(id)
+    return deleteMove
   }
 
 }
