@@ -26,12 +26,9 @@ router.get(
           }
          */
 
-    const movieId = req.params.movieId
+    const { movieId } = req.params
     const playDates = await controllerScreens.getPlayDates(movieId)
-    return res.status(httpCode.OK).json({
-      status: 'success',
-      data: playDates
-    })
+    serviceResponse.success(res, playDates)
   })
 )
 
