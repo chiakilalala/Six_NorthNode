@@ -7,6 +7,7 @@ const serviceResponse = require('@/services/serviceResponse')
 const httpCode = require('@/utilities/httpCode')
 const middlewareAdminAuth = require('@/middlewares/middlewareAdminAuth')
 const Movie = require('../models/modelMovie')
+const mongoose = require('mongoose')
 
 router.post(
   '/',
@@ -117,10 +118,15 @@ router.patch(
   '/:id',
   serviceError.asyncError(async (req, res, next) => {
     const { name, level, desc, releaseData } = req.body
-
+    const { id } = req.params
+    const movie = await Movie.findById(id)
     // 檢查必填欄位是否填寫
     if (!name || !level || !desc || !releaseData) {
       return serviceResponse.error(httpCode.BAD_REQUEST, 'name, level, desc, releaseData內容為必填', next)
+    }
+
+    if (!movie) {
+      return serviceResponse.error(httpCode.NOT_FOUND, '找不到電影', next)
     }
 
     next()
@@ -174,15 +180,11 @@ router.patch(
       */
     const { id } = req.params
     const { name, level, desc, releaseData } = req.body
-    const movie = await Movie.findById(id)
-    if (!movie) {
-      return serviceResponse.error(httpCode.NOT_FOUND, '找不到電影', next)
-    }
-    const Result = await controllerMovie.updateMovie(id, name, level, desc, releaseData)
-    const token = serviceJWT.generateJWT(Result)
 
+    const result = await controllerMovie.updateMovie(id, name, level, desc, releaseData)
+    const token = serviceJWT.generateJWT(result)
     serviceResponse.success(res, {
-      Result,
+      result,
       token
     })
   })
@@ -229,9 +231,10 @@ router.delete(
       }
      */
     const { id } = req.params
-    if (!id) {
+    if (!mongoose.isObjectIdOrHexString(id)) {
       return serviceResponse.error(httpCode.BAD_REQUEST, '刪除失敗', next)
     }
+
     const movie = await Movie.findById(id)
     if (!movie) {
       return serviceResponse.error(httpCode.NOT_FOUND, '找不到電影', next)
