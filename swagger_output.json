@@ -5,7 +5,7 @@
     "title": "META API",
     "description": "API文件"
   },
-  "host": "six-northnode.onrender.com",
+  "host": "localhost:3000",
   "basePath": "/",
   "tags": [],
   "schemes": [
@@ -44,6 +44,45 @@
                 "data": {
                   "type": "string",
                   "example": "Hello World"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/upload/image": {
+      "post": {
+        "tags": [
+          "Upload"
+        ],
+        "summary": "上傳圖片",
+        "description": "上傳圖片",
+        "parameters": [
+          {
+            "name": "image",
+            "in": "formData",
+            "type": "file",
+            "required": "false",
+            "description": "Some description..."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "回傳URL",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "data": {
+                  "type": "string",
+                  "example": "{ fileUrl:'xxx' }"
                 }
               },
               "xml": {
@@ -1023,13 +1062,13 @@
             "in": "body",
             "type": "object",
             "required": "true",
-            "description": "會員註冊用",
+            "description": "新增電影資訊",
             "schema": {
               "type": "object",
               "properties": {
                 "name": {
                   "type": "string",
-                  "example": "鋼鐵人"
+                  "example": "捍衛任務5"
                 },
                 "$imgs": {
                   "type": "array",
@@ -1073,7 +1112,9 @@
               "required": [
                 "name",
                 "level",
-                "desc"
+                "desc",
+                "time",
+                "releaseData"
               ]
             }
           }
@@ -1084,47 +1125,64 @@
             "schema": {
               "type": "object",
               "properties": {
-                "name": {
-                  "type": "string",
-                  "example": "捍衛任務4"
-                },
-                "imgs": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "level": {
-                  "type": "number",
-                  "example": 1
-                },
-                "desc": {
-                  "type": "string",
-                  "example": "一個神隱少女的故事"
-                },
-                "time": {
-                  "type": "number",
-                  "example": 180
-                },
-                "actors": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "videos": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
                 "status": {
-                  "type": "number",
-                  "example": 1
+                  "type": "boolean",
+                  "example": true
                 },
-                "releaseData": {
-                  "type": "string",
-                  "example": "2023-05-01T12:00:00Z"
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "example": "捍衛任務5"
+                    },
+                    "imgs": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "level": {
+                      "type": "number",
+                      "example": 1
+                    },
+                    "desc": {
+                      "type": "string",
+                      "example": "一個神隱少女的故事"
+                    },
+                    "time": {
+                      "type": "number",
+                      "example": 240
+                    },
+                    "actors": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "videos": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "status": {
+                      "type": "number",
+                      "example": 1
+                    },
+                    "releaseData": {
+                      "type": "string",
+                      "example": "2023-05-01T00:00:00.000Z"
+                    },
+                    "createTime": {
+                      "type": "string",
+                      "example": "2023-05-03T14:26:35.378Z"
+                    },
+                    "_id": {
+                      "type": "string",
+                      "example": "64526f1bd4947558c2b2b135"
+                    }
+                  }
                 }
               },
               "xml": {
@@ -1142,8 +1200,11 @@
         "description": "獲取電影列表",
         "parameters": [
           {
-            "name": "isRelease\r",
-            "in": "query"
+            "name": "isRelease",
+            "in": "query",
+            "description": "是否上檔",
+            "type": "boolean",
+            "default": true
           },
           {
             "name": "name",
@@ -1151,13 +1212,6 @@
             "description": "電影名稱模糊搜尋",
             "type": "string",
             "default": "鋼鐵人"
-          },
-          {
-            "name": "isRelease",
-            "description": "是否上檔",
-            "type": "boolean",
-            "default": true,
-            "in": "query"
           }
         ],
         "responses": {
@@ -1231,6 +1285,278 @@
             }
           }
         }
+      }
+    },
+    "/api/movie/{id}": {
+      "patch": {
+        "tags": [
+          "Movie"
+        ],
+        "summary": "修改電影資訊",
+        "description": "修改電影資訊",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "電影id"
+          },
+          {
+            "name": "obj",
+            "in": "body",
+            "type": "object",
+            "required": "true",
+            "description": "編輯電影資訊用",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "星際大戰5"
+                },
+                "imgs": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "level": {
+                  "type": "number",
+                  "example": 1
+                },
+                "desc": {
+                  "type": "string",
+                  "example": "一個神隱少女的故事"
+                },
+                "time": {
+                  "type": "number",
+                  "example": 180
+                },
+                "actors": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "videos": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "status": {
+                  "type": "number",
+                  "example": 1
+                },
+                "releaseData": {
+                  "type": "string",
+                  "example": "2023-05-04"
+                }
+              },
+              "required": [
+                "name",
+                "level",
+                "desc",
+                "time",
+                "releaseData"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "回傳更新成功",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "result": {
+                      "type": "object",
+                      "properties": {
+                        "_id": {
+                          "type": "string",
+                          "example": "6453b1112133d9d29db76c35"
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "神快人kkk人xx"
+                        },
+                        "imgs": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "level": {
+                          "type": "number",
+                          "example": 2
+                        },
+                        "desc": {
+                          "type": "string",
+                          "example": "一個沙贊的故事ddd"
+                        },
+                        "time": {
+                          "type": "number",
+                          "example": 240
+                        },
+                        "actors": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "videos": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "status": {
+                          "type": "number",
+                          "example": 1
+                        },
+                        "releaseData": {
+                          "type": "string",
+                          "example": "2323-01-01T00:00:00.000Z"
+                        }
+                      }
+                    },
+                    "token": {
+                      "type": "string",
+                      "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NTNiMTExMjEzM2Q5ZDI5ZGI3NmMzNSIsImlhdCI6MTY4MzMzMzc3OCwiZXhwIjoxNjgzOTM4NTc4fQ.modt_ykp-Ar6PNimlGlDZjR6GXxQEbKBnQe28mIYk1M"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Movie"
+        ],
+        "summary": "刪除一則電影資訊",
+        "description": "刪除一則電影資訊",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "電影id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "刪除成功",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "_id": {
+                      "type": "string",
+                      "example": "644c5f99474605096360548c"
+                    },
+                    "name": {
+                      "type": "string",
+                      "example": "神隱少女"
+                    },
+                    "imgs": {
+                      "type": "array",
+                      "items": {}
+                    },
+                    "level": {
+                      "type": "number",
+                      "example": 1
+                    },
+                    "desc": {
+                      "type": "string",
+                      "example": "一個神隱少女的故事"
+                    },
+                    "time": {
+                      "type": "number",
+                      "example": 125
+                    },
+                    "actors": {
+                      "type": "array",
+                      "items": {}
+                    },
+                    "videos": {
+                      "type": "array",
+                      "items": {}
+                    },
+                    "releaseData": {
+                      "type": "string",
+                      "example": "2023-05-01T12:00:00.000Z"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "404": {
+            "description": "id不存在",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "message": {
+                  "type": "string",
+                  "example": "找不到電影"
+                },
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 404
+                    },
+                    "isOperational": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
       }
     },
     "/api/screen/screens/{moveId}/playDate": {
