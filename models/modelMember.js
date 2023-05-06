@@ -9,7 +9,7 @@ const memberSchema = new Schema(
     nickName: { type: String, trim: true },
     phoneNumber: { type: String },
     birthday: { type: Date },
-    profilePic: { type: String, default: '/images/profilePic.jpeg' },
+    profilePic: { type: String, default: '' },
     order: { type: Schema.Types.ObjectId, ref: 'Order' }
   },
   { timestamps: true }
