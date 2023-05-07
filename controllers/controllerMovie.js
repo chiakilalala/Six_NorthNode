@@ -59,7 +59,7 @@ const controllerMovie = {
   async deleteOneMovie (id) {
     const movie = await Movie.findById(id)
     if (!movie) {
-      return serviceResponse.error(httpCode.NOT_FOUND, 'ß‰§£®Ïπqºv')
+      return serviceResponse.error(httpCode.NOT_FOUND, 'Êâæ‰∏çÂà∞ÈõªÂΩ±')
     }
     const deleteMove = await Movie.findByIdAndDelete(id)
     return deleteMove
