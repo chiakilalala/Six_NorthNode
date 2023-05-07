@@ -10,7 +10,7 @@ router.post(
   '/',
   middlewareAdminAuth,
   serviceError.asyncError(async (req, res, next) => {
-    const { name, imgs, level, desc, time, actors, videos, status, releaseData } = req.body
+    const { name, imgs, level, desc, time, director, actors, videos, videoImg, status, releaseData } = req.body
     if (!name || !level || !desc || !releaseData) {
       serviceResponse.error(httpCode.BAD_REQUEST, '欄位不可為空', next)
     }
@@ -29,8 +29,10 @@ router.post(
                 "$level": 1,
                 "$desc":'一個神隱少女的故事',
                 "time": 180,
+                "director": "string",
                 "actors": ["string"],
                 "videos": ["string"],
+                "videoImg": "string",
                 "status": 1,
                 "releaseData": "2023-05-01"
         }
@@ -43,8 +45,10 @@ router.post(
           "level": 1,
           "desc": "一個神隱少女的故事",
           "time": 180,
+          "director": "導演名字"
           "actors": ["某某", "某某"],
           "videos": ["https://example.com/video1.mp4"],
+          "videoImg": "https://example.com/img1.jpg"
           "status": 1,
           "releaseData": "2023-05-01T12:00:00Z"
         }
@@ -57,8 +61,10 @@ router.post(
       level,
       desc,
       time,
+      director,
       actors,
       videos,
+      videoImg,
       status,
       releaseData)
     serviceResponse.success(res, result)

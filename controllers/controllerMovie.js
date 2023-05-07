@@ -10,8 +10,10 @@ const controllerMovie = {
     level,
     desc,
     time,
+    director,
     actors,
     videos,
+    videoImg,
     status,
     releaseData,
     createTime
@@ -22,8 +24,10 @@ const controllerMovie = {
       level,
       desc,
       time,
+      director,
       actors,
       videos,
+      videoImg,
       status,
       releaseData,
       createTime
