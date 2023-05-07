@@ -33,6 +33,7 @@ app.use(cors()) // 設定 cors
 // Set up routes 請使用 /api/xxx
 app.use('/api/example', routeExample)
 app.use('/api/upload', routeUpload)
+app.use('/api/member', routeMember)
 app.use('/api/admin', routeAdmin)
 app.use('/api/movie', routeMovie)
 app.use('/api-doc', swaggerUi.serve, swaggerUi.setup(swaggerFile)) // 設定 swagger 的路由
