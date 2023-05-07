@@ -7,7 +7,7 @@ const serviceJWT = require('@/services/serviceJWT')
 
 const controllerMember = {
   // 註冊
-  async signup ({ password, email, nickName }, next) {
+  async signup ({ password, email, nickName }) {
     const newPassword = await hash.password(password)
     const data = {
       email,
@@ -16,7 +16,7 @@ const controllerMember = {
     }
     const checkUser = await modelMember.findOne({ email: data.email })
     if (checkUser !== null) {
-      return next(serviceResponse.error(httpCode.NOT_ACCEPTABLE, '帳號已被使用'))
+      throw serviceResponse.error(httpCode.NOT_ACCEPTABLE, '帳號已被使用')
     }
     const createRes = await modelMember.create(data)
     const signinToken = serviceJWT.generateJWT(createRes)
@@ -24,17 +24,17 @@ const controllerMember = {
     return result
   },
   // 登入
-  async signin (email, password, next) {
+  async signin (email, password) {
     const signinRes = await modelMember.findOne({ email }).select('+password')
 
     if (signinRes === null) {
-      return next(serviceResponse.error(httpCode.NOT_FOUND, '帳號不存在'))
+      throw serviceResponse.error(httpCode.NOT_FOUND, '帳號不存在')
     }
 
     const compare = await hash.compare(password, signinRes.password)
 
     if (!compare) {
-      return next(serviceResponse.error(httpCode.NOT_FOUND, '密碼錯誤'))
+      throw serviceResponse.error(httpCode.NOT_FOUND, '密碼錯誤')
     }
 
     const signinToken = serviceJWT.generateJWT(signinRes)
@@ -56,10 +56,10 @@ const controllerMember = {
     return editPassword
   },
   // 確認信箱是否重複
-  async checkEmail (email, next) {
+  async checkEmail (email) {
     const checkUser = await modelMember.findOne({ email })
     if (checkUser !== null) {
-      return next(serviceResponse.error(httpCode.NOT_ACCEPTABLE, '信箱重複'))
+      throw serviceResponse.error(httpCode.NOT_ACCEPTABLE, '該信箱已被註冊')
     }
 
     const result = {

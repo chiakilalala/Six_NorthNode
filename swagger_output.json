@@ -54,45 +54,6 @@
         }
       }
     },
-    "/api/upload/image": {
-      "post": {
-        "tags": [
-          "Upload"
-        ],
-        "summary": "上傳圖片",
-        "description": "上傳圖片",
-        "parameters": [
-          {
-            "name": "image",
-            "in": "formData",
-            "type": "file",
-            "required": "false",
-            "description": "Some description..."
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "回傳URL",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "status": {
-                  "type": "boolean",
-                  "example": true
-                },
-                "data": {
-                  "type": "string",
-                  "example": "{ fileUrl:'xxx' }"
-                }
-              },
-              "xml": {
-                "name": "main"
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/member/signup": {
       "post": {
         "tags": [
@@ -190,7 +151,7 @@
             }
           },
           "400": {
-            "description": "email格式錯誤",
+            "description": "密碼強度",
             "schema": {
               "type": "object",
               "properties": {
@@ -200,7 +161,7 @@
                 },
                 "message": {
                   "type": "string",
-                  "example": "信箱格式錯誤"
+                  "example": "密碼長度至少8位、須包含數字與英文"
                 },
                 "error": {
                   "type": "object",
@@ -240,6 +201,38 @@
                     "statusCode": {
                       "type": "number",
                       "example": 402
+                    },
+                    "isOperational": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "406": {
+            "description": "信箱重複",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "message": {
+                  "type": "string",
+                  "example": "信箱重複"
+                },
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 406
                     },
                     "isOperational": {
                       "type": "boolean",
@@ -660,6 +653,38 @@
               }
             }
           },
+          "400": {
+            "description": "密碼強度",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "message": {
+                  "type": "string",
+                  "example": "密碼長度至少8位、須包含數字與英文"
+                },
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 400
+                    },
+                    "isOperational": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
           "402": {
             "description": "密碼不能為空",
             "schema": {
@@ -832,7 +857,7 @@
                 },
                 "birthday": {
                   "type": "string",
-                  "example": "Sat Apr 29 2023 16:20:13 GMT+0800 (台北標準時間)"
+                  "example": "Sat Apr 29 2023 16:20:13 GMT+0800 (台北標準時間)或2020-01-01"
                 },
                 "profilePic": {
                   "type": "string",
@@ -907,6 +932,96 @@
         ]
       }
     },
+    "/api/member/checkToken": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "檢查是否有登入",
+        "description": "檢查是否有登入",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string",
+            "required": "true",
+            "description": "檢查是否有登入用",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "header.authorization": {
+                  "type": "string",
+                  "example": "Bearer token"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "修改會員資料",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "已驗證的使用者"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "401": {
+            "description": "token驗證錯誤",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "message": {
+                  "type": "string",
+                  "example": "沒有權限"
+                },
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 401
+                    },
+                    "isOperational": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    },
     "/api/admin/signup": {
       "post": {
         "tags": [
@@ -914,32 +1029,75 @@
         ],
         "summary": "管理員註冊",
         "description": "管理員註冊",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "type": "object",
+            "required": "true",
+            "description": "會員註冊用",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string",
+                  "example": "example@gmail.com"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "password"
+                },
+                "name": {
+                  "type": "string",
+                  "example": "name"
+                }
+              },
+              "required": [
+                "email",
+                "password",
+                "name"
+              ]
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "回傳範例資料",
             "schema": {
               "type": "object",
               "properties": {
-                "name": {
-                  "type": "string",
-                  "example": "admin"
+                "user": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "example": "name"
+                    },
+                    "email": {
+                      "type": "string",
+                      "example": "example@gmail.com"
+                    },
+                    "password": {
+                      "type": "string",
+                      "example": "$2a$12$ZNPx7mwkP0/QC6h6eaW5eeuJXdEQrolyIejEZEc55p2doi3C6g/3q"
+                    },
+                    "role": {
+                      "type": "string",
+                      "example": "admin"
+                    },
+                    "_id": {
+                      "type": "string",
+                      "example": "644f92cfcb3582d71cee8d80"
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "example": "2023-05-01T10:22:07.078Z"
+                    }
+                  }
                 },
-                "email": {
+                "token": {
                   "type": "string",
-                  "example": "admin@gmail.com"
-                },
-                "password": {
-                  "type": "string",
-                  "example": "admin123"
-                },
-                "confirmPassword": {
-                  "type": "string",
-                  "example": "admin123"
-                },
-                "role": {
-                  "type": "string",
-                  "example": "admin"
+                  "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NGY5MmNmY2IzNTgyZDcxY2VlOGQ4MCIsImlhdCI6MTY4MjkzNjUyNywiZXhwIjoxNjgzNTQxMzI3fQ.yt4zPWEnxZ5Vj49Mcsq61j1qo4Bv0pfdH8GbJazkyE0"
                 }
               },
               "xml": {
@@ -953,11 +1111,36 @@
     "/api/admin/login": {
       "post": {
         "tags": [
-          "AdminLogin"
+          "Admin"
         ],
         "summary": "管理員登入",
         "description": "管理員登入",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "type": "object",
+            "required": "true",
+            "description": "會員註冊用",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string",
+                  "example": "example@gmail.com"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "password"
+                }
+              },
+              "required": [
+                "email",
+                "password"
+              ]
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "回傳範例資料",
@@ -971,6 +1154,270 @@
                 "data": {
                   "type": "string",
                   "example": "登入成功"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/movie/": {
+      "post": {
+        "tags": [
+          "Movie"
+        ],
+        "summary": "新增電影資訊",
+        "description": "新增電影資訊",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "type": "object",
+            "required": "true",
+            "description": "會員註冊用",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "鋼鐵人"
+                },
+                "$imgs": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "level": {
+                  "type": "number",
+                  "example": 1
+                },
+                "desc": {
+                  "type": "string",
+                  "example": "一個神隱少女的故事"
+                },
+                "time": {
+                  "type": "number",
+                  "example": 180
+                },
+                "actors": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "videos": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "status": {
+                  "type": "number",
+                  "example": 1
+                },
+                "releaseData": {
+                  "type": "string",
+                  "example": "2023-05-01"
+                }
+              },
+              "required": [
+                "name",
+                "level",
+                "desc"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "回傳範例資料",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "捍衛任務4"
+                },
+                "imgs": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "level": {
+                  "type": "number",
+                  "example": 1
+                },
+                "desc": {
+                  "type": "string",
+                  "example": "一個神隱少女的故事"
+                },
+                "time": {
+                  "type": "number",
+                  "example": 180
+                },
+                "actors": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "videos": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "status": {
+                  "type": "number",
+                  "example": 1
+                },
+                "releaseData": {
+                  "type": "string",
+                  "example": "2023-05-01T12:00:00Z"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Movie"
+        ],
+        "summary": "獲取電影列表",
+        "description": "獲取電影列表",
+        "parameters": [
+          {
+            "name": "isRelease\r",
+            "in": "query"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "電影名稱模糊搜尋",
+            "type": "string",
+            "default": "鋼鐵人"
+          },
+          {
+            "name": "isRelease",
+            "description": "是否上檔",
+            "type": "boolean",
+            "default": true,
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "回傳範例資料",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "number",
+                        "example": 1
+                      },
+                      "name": {
+                        "type": "string",
+                        "example": "鋼鐵人"
+                      },
+                      "imgs": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "level": {
+                        "type": "number",
+                        "example": 0
+                      },
+                      "desc": {
+                        "type": "string",
+                        "example": "string"
+                      },
+                      "time": {
+                        "type": "number",
+                        "example": 90
+                      },
+                      "actors": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "videos": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "status": {
+                        "type": "number",
+                        "example": 1
+                      },
+                      "release_data": {
+                        "type": "string",
+                        "example": "yymmdd-hms"
+                      }
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/screens/{movieId}/playDate": {
+      "get": {
+        "tags": [
+          "Screen"
+        ],
+        "summary": "某部電影所有播放日期",
+        "description": "某部電影所有播放日期",
+        "parameters": [
+          {
+            "name": "movieId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "電影id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "回傳範例資料",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "自行填寫"
+                },
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 }
               },
               "xml": {

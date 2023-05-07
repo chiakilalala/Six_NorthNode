@@ -65,19 +65,45 @@ router.post('/signup', serviceError.asyncError(async (req, res, next) => {
         },
       }
     }
+    * #swagger.responses[406] = {
+      description: '信箱重複',
+      schema: {
+        "status": false,
+        "message": "信箱重複",
+        "error": {
+        "statusCode": 406,
+        "isOperational": true
+        },
+      }
+    }
+    * #swagger.responses[400] = {
+      description: '密碼強度',
+      schema: {
+        "status": false,
+        "message": "密碼長度至少8位、須包含數字與英文",
+        "error": {
+        "statusCode": 400,
+        "isOperational": true
+        },
+      }
+    }
    */
 
   const { email, password, nickName } = req.body
 
   if (!email || !password || !nickName) {
-    serviceResponse.error(httpCode.PAYMENT_REQUIRED, '信箱、密碼、暱稱不可空白', next)
+    throw serviceResponse.error(httpCode.PAYMENT_REQUIRED, '信箱、密碼、暱稱不可空白')
   }
 
   if (!validator.isEmail(email)) {
-    serviceResponse.error(httpCode.BAD_REQUEST, '信箱格式錯誤', next)
+    throw serviceResponse.error(httpCode.BAD_REQUEST, '信箱格式錯誤')
   }
 
-  const result = await controllerMember.signup({ password, email, nickName }, next)
+  if (!validator.isStrongPassword(password, { minLength: 8, minSymbols: 0, minUppercase: 0 })) {
+    throw serviceResponse.error(httpCode.BAD_REQUEST, '密碼長度至少8位、須包含數字與英文')
+  }
+
+  const result = await controllerMember.signup({ password, email, nickName })
   serviceResponse.success(res, result)
 })
 )
@@ -164,14 +190,14 @@ router.post('/signin', serviceError.asyncError(async (req, res, next) => {
    */
   const { email, password } = req.body
   if (!email || !password) {
-    serviceResponse.error(httpCode.PAYMENT_REQUIRED, '帳號密碼必填', next)
+    throw serviceResponse.error(httpCode.PAYMENT_REQUIRED, '帳號密碼必填')
   }
 
   if (!validator.isEmail(email)) {
-    serviceResponse.error(httpCode.BAD_REQUEST, '信箱格式錯誤', next)
+    throw serviceResponse.error(httpCode.BAD_REQUEST, '信箱格式錯誤')
   }
 
-  const result = await controllerMember.signin(email, password, next)
+  const result = await controllerMember.signin(email, password)
   serviceResponse.success(res, result)
 }))
 
@@ -225,10 +251,10 @@ router.post('/checkEmail', serviceError.asyncError(async (req, res, next) => {
   const { email } = req.body
 
   if (!validator.isEmail(email)) {
-    serviceResponse.error(httpCode.BAD_REQUEST, '信箱格式錯誤', next)
+    throw serviceResponse.error(httpCode.BAD_REQUEST, '信箱格式錯誤')
   }
 
-  const result = await controllerMember.checkEmail(email, next)
+  const result = await controllerMember.checkEmail(email)
   serviceResponse.success(res, result)
 }))
 
@@ -288,16 +314,31 @@ router.post('/changePassword', middlewareAuth.loginAuth, serviceError.asyncError
         },
       }
     }
+    * #swagger.responses[400] = {
+      description: '密碼強度',
+      schema: {
+        "status": false,
+        "message": "密碼長度至少8位、須包含數字與英文",
+        "error": {
+        "statusCode": 400,
+        "isOperational": true
+        },
+      }
+    }
    */
   // 從jwt取得使用者id
   const { user } = req
   const { password, confirmPassword } = req.body
   if (!password || !confirmPassword) {
-    return next(serviceResponse.error(httpCode.PAYMENT_REQUIRED, '密碼不能為空'))
+    throw next(serviceResponse.error(httpCode.PAYMENT_REQUIRED, '密碼不能為空'))
   }
 
   if (password !== confirmPassword) {
-    return next(serviceResponse.error(httpCode.NOT_ACCEPTABLE, '密碼不一致'))
+    throw next(serviceResponse.error(httpCode.NOT_ACCEPTABLE, '密碼不一致'))
+  }
+
+  if (!validator.isStrongPassword(password, { minLength: 8, minSymbols: 0, minUppercase: 0 })) {
+    throw serviceResponse.error(httpCode.BAD_REQUEST, '密碼長度至少8位、須包含數字與英文')
   }
 
   const result = await controllerMember.changePassword(user, password)
@@ -350,7 +391,7 @@ router.post('/updateUser', middlewareAuth.loginAuth, serviceError.asyncError(asy
       schema:{
               "nickName": '使用者暱稱',
               "phoneNumber": '0912345678',
-              "birthday":'Sat Apr 29 2023 16:20:13 GMT+0800 (台北標準時間)',
+              "birthday":'Sat Apr 29 2023 16:20:13 GMT+0800 (台北標準時間)或2020-01-01',
               "profilePic":'上傳圖片回傳的URL'
           }
     }
@@ -377,4 +418,51 @@ router.post('/updateUser', middlewareAuth.loginAuth, serviceError.asyncError(asy
   const result = await controllerMember.updateUser({ user, nickName, phoneNumber, birthday, profilePic })
   serviceResponse.success(res, result)
 }))
+
+// 檢查是否登入
+router.get('/checkToken', middlewareAuth.loginAuth, serviceError.asyncError(async (req, res, next) => {
+  /**
+   * #swagger.tags = ['User']
+   * #swagger.security = [{ 'apiKeyAuth': [] }]
+   * #swagger.summary = '檢查是否有登入'
+   * #swagger.description = '檢查是否有登入'
+   * * #swagger.parameters['authorization'] = {
+      in: 'header',
+      type: 'string',
+      required: 'true',
+      description: '檢查是否有登入用',
+      schema:{
+              "header.authorization": 'Bearer token'
+          }
+    }
+    * #swagger.responses[200] = {
+      description: '修改會員資料',
+      schema: {
+        "status": true,
+        "data": {
+          "message": "已驗證的使用者"
+        },
+      }
+    }
+    * #swagger.responses[401] = {
+      description: 'token驗證錯誤',
+      schema: {
+        "status": false,
+        "message": "沒有權限",
+        "error": {
+        "statusCode": 401,
+        "isOperational": true
+        },
+      }
+    }
+   */
+  const { user } = req
+  if (user !== undefined && user !== '') {
+    const data = {
+      message: '已驗證的使用者'
+    }
+    serviceResponse.success(res, data)
+  }
+}))
+
 module.exports = router
