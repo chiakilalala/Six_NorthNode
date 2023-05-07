@@ -96,18 +96,13 @@ router.get(
       }
      */
 
-    try {
-      const isRelease = req.query.isRelease
-      const name = req.query.name || ''
-      const movies = await controllerMovie.getMovies(isRelease, name)
-      serviceResponse.success(res, {
-        isRelease,
-        data: movies
-      })
-    } catch (error) {
-      console.error(error)
-      serviceResponse.error(res, 'Something went wrong.', 500)
-    }
+    const isRelease = req.query.isRelease
+    const name = req.query.name || ''
+    const movies = await controllerMovie.getMovies(isRelease, name)
+    serviceResponse.success(res, {
+      isRelease,
+      data: movies
+    })
   })
 )
 module.exports = router

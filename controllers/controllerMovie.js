@@ -32,38 +32,17 @@ const controllerMovie = {
   },
 
   async getMovies (isRelease, name) {
-    let movies = []
-
-    if (isRelease !== undefined) {
-      const releaseDate = new Date()
-      const released = isRelease === 'true'
-
-      // filter by release date
-      movies = await Movie.find({
-        name: { $regex: name, $options: 'i' },
-        releaseData: {
-          [released ? '$lte' : '$gt']: releaseDate
-        }
-      })
-    } else if (name !== '') {
-    // fuzzy search
-      movies = await Movie.find({
-        name: { $regex: name, $options: 'i' }
-      })
-    } else {
-    // return all movies
-      movies = await Movie.find()
+    const query = {}
+    if (name) {
+      query.name = { $regex: name, $options: 'i' }
     }
-
-    movies = movies.filter(movie => {
-      const releaseData = movie.releaseData
-      if (!releaseData) {
-        return false
-      }
-      return typeof releaseData.getMonth === 'function'
-    })
-
-    return movies
+    if (isRelease === 'true') {
+      query.releaseData = { $lte: new Date() }
+    } else if (isRelease === 'false') {
+      query.releaseData = { $gt: new Date() }
+    }
+    const result = await Movie.find(query)
+    return result
   }
 
 }
