@@ -59,7 +59,7 @@ const controllerMember = {
   async checkEmail (email, next) {
     const checkUser = await modelMember.findOne({ email })
     if (checkUser !== null) {
-      return next(serviceResponse.error(httpCode.NOT_ACCEPTABLE, '信箱重複'))
+      return next(serviceResponse.error(httpCode.NOT_ACCEPTABLE, '該信箱已被註冊'))
     }
 
     const result = {
