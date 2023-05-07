@@ -47,6 +47,26 @@ const controllerMovie = {
     }
     const result = await Movie.find(query)
     return result
+  },
+
+  async updateMovie (id, name, level, desc, releaseData) {
+    const updatedMovie = await Movie.findByIdAndUpdate(
+      id, {
+        name,
+        level,
+        desc,
+        releaseData
+      }, { new: true, returnDocument: 'after' })
+
+    return updatedMovie
+  },
+  async deleteOneMovie (id) {
+    const movie = await Movie.findById(id)
+    if (!movie) {
+      return serviceResponse.error(httpCode.NOT_FOUND, '找不到電影')
+    }
+    const deleteMove = await Movie.findByIdAndDelete(id)
+    return deleteMove
   }
 
 }

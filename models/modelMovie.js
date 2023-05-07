@@ -57,7 +57,8 @@ const modelExample = mongoose.model(
     createTime: {
       type: Date,
       default: Date.now,
-      select: false
+      select: false,
+      required: true
     }
   }, {
     toJSON: {
