@@ -37,7 +37,7 @@ app.use('/api/upload', routeUpload)
 app.use('/api/member', routeMember)
 app.use('/api/admin', routeAdmin)
 app.use('/api/movie', routeMovie)
-app.use('/api/screen', routeScreen)
+app.use('/api/screens', routeScreen)
 app.use('/api-doc', swaggerUi.serve, swaggerUi.setup(swaggerFile)) // 設定 swagger 的路由
 
 // Set up error handling
