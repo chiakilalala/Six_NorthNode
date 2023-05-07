@@ -3,9 +3,9 @@ const mongoose = require('mongoose')
 
 const screensSchema = new mongoose.Schema({
   movieId: { type: mongoose.Types.ObjectId, ref: 'Movie', required: true },
-  theaterId: { type: Object, required: true },
+  theaterId: { type: mongoose.Types.ObjectId, ref: 'theater', required: true },
   seatsStatus: { type: Object, required: true },
-  startDate: [{ type: Date, required: true }],
+  startDate: { type: Date, required: true },
   createTime: { type: Date, required: true }
 }, {
   toJSON: {

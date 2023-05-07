@@ -99,10 +99,8 @@ router.get(
     const isRelease = req.query.isRelease
     const name = req.query.name || ''
     const movies = await controllerMovie.getMovies(isRelease, name)
-    serviceResponse.success(res, {
-      isRelease,
-      data: movies
-    })
+    const result = { isRelease, data: movies }
+    serviceResponse.success(res, result)
   })
 )
 module.exports = router
