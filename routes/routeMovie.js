@@ -1,7 +1,6 @@
 const express = require('express')
 const router = express.Router()
 const serviceError = require('@/services/serviceError')
-const serviceJWT = require('@/services/serviceJWT')
 const controllerMovie = require('@/controllers/controllerMovie')
 const serviceResponse = require('@/services/serviceResponse')
 const httpCode = require('@/utilities/httpCode')
@@ -174,7 +173,6 @@ router.patch(
                 "status": 1,
                 "releaseData": "2323-01-01T00:00:00.000Z"
               },
-              "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NTNiMTExMjEzM2Q5ZDI5ZGI3NmMzNSIsImlhdCI6MTY4MzMzMzc3OCwiZXhwIjoxNjgzOTM4NTc4fQ.modt_ykp-Ar6PNimlGlDZjR6GXxQEbKBnQe28mIYk1M"
             }
           }
         }
@@ -183,11 +181,8 @@ router.patch(
     const { name, level, desc, releaseData } = req.body
 
     const result = await controllerMovie.updateMovie(id, name, level, desc, releaseData)
-    const token = serviceJWT.generateJWT(result)
-    serviceResponse.success(res, {
-      result,
-      token
-    })
+
+    serviceResponse.success(res, result)
   })
 )
 
@@ -237,10 +232,6 @@ router.delete(
       return serviceResponse.error(httpCode.BAD_REQUEST, '刪除失敗', next)
     }
 
-    const movie = await Movie.findById(id)
-    if (!movie) {
-      return serviceResponse.error(httpCode.NOT_FOUND, '找不到電影', next)
-    }
     const result = await controllerMovie.deleteOneMovie(id)
     serviceResponse.success(res, result)
   })

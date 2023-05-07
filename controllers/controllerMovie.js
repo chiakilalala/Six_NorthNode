@@ -57,6 +57,10 @@ const controllerMovie = {
     return updatedMovie
   },
   async deleteOneMovie (id) {
+    const movie = await Movie.findById(id)
+    if (!movie) {
+      return serviceResponse.error(httpCode.NOT_FOUND, '找不到電影')
+    }
     const deleteMove = await Movie.findByIdAndDelete(id)
     return deleteMove
   }
