@@ -54,6 +54,45 @@
         }
       }
     },
+    "/api/upload/image": {
+      "post": {
+        "tags": [
+          "Upload"
+        ],
+        "summary": "上傳圖片",
+        "description": "上傳圖片",
+        "parameters": [
+          {
+            "name": "image",
+            "in": "formData",
+            "type": "file",
+            "required": "false",
+            "description": "Some description..."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "回傳URL",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "data": {
+                  "type": "string",
+                  "example": "{ fileUrl:'xxx' }"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/member/signup": {
       "post": {
         "tags": [
@@ -151,7 +190,7 @@
             }
           },
           "400": {
-            "description": "email格式錯誤",
+            "description": "密碼強度",
             "schema": {
               "type": "object",
               "properties": {
@@ -161,14 +200,14 @@
                 },
                 "message": {
                   "type": "string",
-                  "example": "信箱格式錯誤"
+                  "example": "密碼長度至少8位、須包含數字與英文"
                 },
                 "error": {
                   "type": "object",
                   "properties": {
                     "statusCode": {
                       "type": "number",
-                      "example": 400
+                      "example": 406
                     },
                     "isOperational": {
                       "type": "boolean",
@@ -201,6 +240,38 @@
                     "statusCode": {
                       "type": "number",
                       "example": 402
+                    },
+                    "isOperational": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "406": {
+            "description": "信箱重複",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "message": {
+                  "type": "string",
+                  "example": "信箱重複"
+                },
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 406
                     },
                     "isOperational": {
                       "type": "boolean",
@@ -793,7 +864,7 @@
                 },
                 "birthday": {
                   "type": "string",
-                  "example": "Sat Apr 29 2023 16:20:13 GMT+0800 (台北標準時間)"
+                  "example": "Sat Apr 29 2023 16:20:13 GMT+0800 (台北標準時間)或2020-01-01"
                 },
                 "profilePic": {
                   "type": "string",
@@ -851,6 +922,96 @@
                     "phoneNumber": {
                       "type": "string",
                       "example": "0912345678"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/api/member/checkToken": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "檢查是否有登入",
+        "description": "檢查是否有登入",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string",
+            "required": "true",
+            "description": "檢查是否有登入用",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "header.authorization": {
+                  "type": "string",
+                  "example": "Bearer token"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "修改會員資料",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "已驗證的使用者"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "401": {
+            "description": "token驗證錯誤",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "message": {
+                  "type": "string",
+                  "example": "沒有權限"
+                },
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 401
+                    },
+                    "isOperational": {
+                      "type": "boolean",
+                      "example": true
                     }
                   }
                 }
