@@ -82,7 +82,7 @@ router.post('/signup', serviceError.asyncError(async (req, res, next) => {
         "status": false,
         "message": "密碼長度至少8位、須包含數字與英文",
         "error": {
-        "statusCode": 406,
+        "statusCode": 400,
         "isOperational": true
         },
       }
@@ -314,6 +314,17 @@ router.post('/changePassword', middlewareAuth.loginAuth, serviceError.asyncError
         },
       }
     }
+    * #swagger.responses[400] = {
+      description: '密碼強度',
+      schema: {
+        "status": false,
+        "message": "密碼長度至少8位、須包含數字與英文",
+        "error": {
+        "statusCode": 400,
+        "isOperational": true
+        },
+      }
+    }
    */
   // 從jwt取得使用者id
   const { user } = req
@@ -324,6 +335,10 @@ router.post('/changePassword', middlewareAuth.loginAuth, serviceError.asyncError
 
   if (password !== confirmPassword) {
     throw next(serviceResponse.error(httpCode.NOT_ACCEPTABLE, '密碼不一致'))
+  }
+
+  if (!validator.isStrongPassword(password, { minLength: 8, minSymbols: 0, minUppercase: 0 })) {
+    throw serviceResponse.error(httpCode.BAD_REQUEST, '密碼長度至少8位、須包含數字與英文')
   }
 
   const result = await controllerMember.changePassword(user, password)
