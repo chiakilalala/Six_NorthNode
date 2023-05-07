@@ -914,32 +914,75 @@
         ],
         "summary": "管理員註冊",
         "description": "管理員註冊",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "type": "object",
+            "required": "true",
+            "description": "會員註冊用",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string",
+                  "example": "example@gmail.com"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "password"
+                },
+                "name": {
+                  "type": "string",
+                  "example": "name"
+                }
+              },
+              "required": [
+                "email",
+                "password",
+                "name"
+              ]
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "回傳範例資料",
             "schema": {
               "type": "object",
               "properties": {
-                "name": {
-                  "type": "string",
-                  "example": "admin"
+                "user": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "example": "name"
+                    },
+                    "email": {
+                      "type": "string",
+                      "example": "example@gmail.com"
+                    },
+                    "password": {
+                      "type": "string",
+                      "example": "$2a$12$ZNPx7mwkP0/QC6h6eaW5eeuJXdEQrolyIejEZEc55p2doi3C6g/3q"
+                    },
+                    "role": {
+                      "type": "string",
+                      "example": "admin"
+                    },
+                    "_id": {
+                      "type": "string",
+                      "example": "644f92cfcb3582d71cee8d80"
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "example": "2023-05-01T10:22:07.078Z"
+                    }
+                  }
                 },
-                "email": {
+                "token": {
                   "type": "string",
-                  "example": "admin@gmail.com"
-                },
-                "password": {
-                  "type": "string",
-                  "example": "admin123"
-                },
-                "confirmPassword": {
-                  "type": "string",
-                  "example": "admin123"
-                },
-                "role": {
-                  "type": "string",
-                  "example": "admin"
+                  "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NGY5MmNmY2IzNTgyZDcxY2VlOGQ4MCIsImlhdCI6MTY4MjkzNjUyNywiZXhwIjoxNjgzNTQxMzI3fQ.yt4zPWEnxZ5Vj49Mcsq61j1qo4Bv0pfdH8GbJazkyE0"
                 }
               },
               "xml": {
@@ -953,11 +996,36 @@
     "/api/admin/login": {
       "post": {
         "tags": [
-          "AdminLogin"
+          "Admin"
         ],
         "summary": "管理員登入",
         "description": "管理員登入",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "type": "object",
+            "required": "true",
+            "description": "會員註冊用",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string",
+                  "example": "example@gmail.com"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "password"
+                }
+              },
+              "required": [
+                "email",
+                "password"
+              ]
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "回傳範例資料",
