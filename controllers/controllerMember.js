@@ -16,7 +16,7 @@ const controllerMember = {
     }
     const checkUser = await modelMember.findOne({ email: data.email })
     if (checkUser !== null) {
-      throw serviceResponse.error(httpCode.NOT_ACCEPTABLE, '帳號已被使用', next)
+      throw serviceResponse.error(httpCode.NOT_ACCEPTABLE, '帳號已被使用')
     }
     const createRes = await modelMember.create(data)
     const signinToken = serviceJWT.generateJWT(createRes)
@@ -28,13 +28,13 @@ const controllerMember = {
     const signinRes = await modelMember.findOne({ email }).select('+password')
 
     if (signinRes === null) {
-      throw serviceResponse.error(httpCode.NOT_FOUND, '帳號不存在', next)
+      throw serviceResponse.error(httpCode.NOT_FOUND, '帳號不存在')
     }
 
     const compare = await hash.compare(password, signinRes.password)
 
     if (!compare) {
-      throw serviceResponse.error(httpCode.NOT_FOUND, '密碼錯誤', next)
+      throw serviceResponse.error(httpCode.NOT_FOUND, '密碼錯誤')
     }
 
     const signinToken = serviceJWT.generateJWT(signinRes)
@@ -59,7 +59,7 @@ const controllerMember = {
   async checkEmail (email, next) {
     const checkUser = await modelMember.findOne({ email })
     if (checkUser !== null) {
-      throw serviceResponse.error(httpCode.NOT_ACCEPTABLE, '該信箱已被註冊', next)
+      throw serviceResponse.error(httpCode.NOT_ACCEPTABLE, '該信箱已被註冊')
     }
 
     const result = {
