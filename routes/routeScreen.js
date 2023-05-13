@@ -136,18 +136,30 @@ router.get(
             schema: {
               "status": true,
               "data":[
-                '2023-06-01',
-                '2023-06-02',
-                '2023-06-03'
-              ]
+                "_id": "6459143a5941f29f5db5c265",
+                "movieId": {
+                "_id": "645789e21f8ffbb4ed1388fd",
+                "name": "鈴芽之旅"
+            },
+               "theaterId": {
+                "_id": "6458e59aae4008081f29c7b1",
+                "type": 0
+            },
+             "seatsStatus": [
+                {
+                    "seat_id": "A1",
+                    "is_booked": true
+                },
+              ],
+              "startDate": "2023-05-20T14:00:00.000Z",
             }
           }
     */
     const { movieId, type, startDate, name } = req.query
 
     const result = await controllerScreens.getScreens(movieId, type, startDate, name)
-    console.log(result, 'controllerScreens.getScreens')
-    console.log(req.query, 'req.query')
+    // console.log(result, 'controllerScreens.getScreens')
+    // console.log(req.query, 'req.query')
     serviceResponse.success(res, result)
   })
 
@@ -191,7 +203,6 @@ router.get(
 
     const { screenId } = req.params
     const result = await controllerScreens.getOneScreen(screenId)
-
     serviceResponse.success(res, result)
   })
 )

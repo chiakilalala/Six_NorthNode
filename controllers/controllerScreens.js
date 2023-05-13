@@ -2,7 +2,9 @@ const Screens = require('../models/modelScreens')
 const Theaters = require('../models/modelTheaters')
 const serviceResponse = require('@/services/serviceResponse.js')
 const httpCode = require('@/utilities/httpCode')
+const Movie = require('../models/modelMovie')
 const mongoose = require('mongoose')
+const serviceValidateDate = require('@/services/serviceValidateDate')
 
 const controllerScreens = {
 
@@ -29,7 +31,7 @@ const controllerScreens = {
   async  insertScreens (movieId, theaterId, startDate) {
     const movieExist = await Screens.findOne({ theaterId, startDate })
     console.log(theaterId, startDate)
-    if (movieExist) {
+    if (movieExist > 0) {
       throw serviceResponse.error(httpCode.BAD_REQUEST, '有重複的場次請修正')
     }
 
@@ -40,7 +42,7 @@ const controllerScreens = {
       createTime: new Date()
     })
 
-    const existingScreen = await Screens.findById(newScreens._id)
+    const result = await Screens.findById(newScreens._id)
       .populate({
         path: 'movieId',
         select: 'name'
@@ -50,10 +52,10 @@ const controllerScreens = {
         select: 'type'
       })
 
-    console.log(existingScreen.theaterId.type)
+    console.log(result.theaterId.type)
 
     const seatsStatus = []
-    if (existingScreen.theaterId.type === 0) {
+    if (result.theaterId.type === 0) {
       const rows = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M']
       for (let i = 0; i < rows.length; i++) {
         for (let j = 1; j <= 10; j++) {
@@ -63,7 +65,7 @@ const controllerScreens = {
           })
         }
       }
-    } else if (existingScreen.theaterId.type === 1) {
+    } else if (result.theaterId.type === 1) {
       const rows = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O']
       for (let i = 0; i < rows.length; i++) {
         for (let j = 1; j <= 16; j++) {
@@ -74,29 +76,27 @@ const controllerScreens = {
         }
       }
     }
-    if (!existingScreen) {
+    if (!result) {
       return serviceResponse.error(httpCode.INTERNAL_SERVER_ERROR, '無法建立場次，請稍後再試')
     }
-    return { existingScreen }
+    return { result }
   },
 
   async getScreens (movieId, type, startDate, name) {
     const query = {}
 
     if (type !== undefined) {
-      const parsedType = parseInt(type, 10)
-      if (isNaN(parsedType)) {
-        throw serviceResponse.error(httpCode.BAD_REQUEST, 'Invalid Type')
+      const theaters = await Theaters.findOne({ type }).catch(() => {
+        throw serviceResponse.error(httpCode.BAD_REQUEST, 'Invalid Date')
+      })
+      if (!theaters) {
+        throw serviceResponse.error(httpCode.NOT_FOUND, 'Theater not found')
       }
-
-      query['theaterId.type'] = parsedType
+      query.theaterId = theaters._id
     }
 
     if (startDate !== undefined) {
-      const dateRegex = /^\d{4}-\d{2}-\d{2}$/
-      if (!dateRegex.test(startDate)) {
-        throw serviceResponse.error(httpCode.BAD_REQUEST, 'Invalid Date')
-      }
+      serviceValidateDate.validateDate(startDate) // 驗證日期
       const startDateTime = new Date(startDate).toISOString()
       const endDate = new Date(startDateTime)
       endDate.setDate(endDate.getDate() + 1)
@@ -113,19 +113,35 @@ const controllerScreens = {
         throw serviceResponse.error(httpCode.BAD_REQUEST, 'Invalid theaterId')
       }
     }
+
     if (name !== undefined) {
-      query['movieId.name'] = { $regex: name, $options: 'i' }
-    }
-    console.log(query, 'before')
-    const result = await Screens.find(query)
-      .populate('movieId', 'name')
-      .populate('theaterId', 'type')
-      .catch(error => {
+      const movies = await Movie.find({ name: { $regex: name, $options: 'i' } }).catch(error => {
         throw serviceResponse.error(httpCode.INTERNAL_SERVER_ERROR, error.message)
       })
-    console.log(query, 'after')
-    console.log(result, 'result')
-    return result
+      if (movies.length === 0) {
+        return []
+      }
+      const movieIds = movies.map(movie => movie._id)
+      query.movieId = { $in: movieIds }
+    }
+    // console.log(query, 'before')
+    const result = await Screens.find(query)
+      .populate({
+        path: 'movieId',
+        select: 'name',
+        match: { name: { $regex: new RegExp(name, 'i') } }
+      })
+      .populate({
+        path: 'theaterId',
+        select: 'type',
+        match: { type: { $ne: null } }
+      })
+      .exec()
+    const filterResult = result.filter(screen => screen.movieId && screen.theaterId)
+
+    // console.log(query, 'after')
+    // console.log(filterResult, 'result')
+    return filterResult
   },
   async getOneScreen (screenId) {
     const OneScreen = await Screens.findById(screenId)
@@ -157,7 +173,7 @@ const controllerScreens = {
     if (screenExist) {
       throw serviceResponse.error(httpCode.BAD_REQUEST, '有重複的場次請修正')
     }
-    console.log(screenExist)
+
     const result = await Screens.findByIdAndUpdate(
       screenid, {
         seatsStatus,
