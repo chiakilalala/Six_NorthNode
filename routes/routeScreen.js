@@ -136,30 +136,31 @@ router.get(
             schema: {
               "status": true,
               "data":[
-                "_id": "6459143a5941f29f5db5c265",
-                "movieId": {
-                "_id": "645789e21f8ffbb4ed1388fd",
-                "name": "鈴芽之旅"
-            },
-               "theaterId": {
-                "_id": "6458e59aae4008081f29c7b1",
-                "type": 0
-            },
-             "seatsStatus": [
                 {
-                    "seat_id": "A1",
-                    "is_booked": true
-                },
-              ],
-              "startDate": "2023-05-20T14:00:00.000Z",
-            }
+                  "_id": "6459143a5941f29f5db5c265",
+                  "movieId": {
+                  "_id": "645789e21f8ffbb4ed1388fd",
+                  "name": "鈴芽之旅"
+                  },
+                  "theaterId": {
+                      "_id": "6458e59aae4008081f29c7b1",
+                      "type": 0
+                  },
+                  "startDate": "2023-05-20T14:00:00.000Z",
+                  "seatsStatus":[
+                    {
+                        "seat_id": "A1",
+                        "is_booked": true
+                    },
+                  ],
+                }
+              ]
           }
+        }
     */
     const { movieId, type, startDate, name } = req.query
 
     const result = await controllerScreens.getScreens(movieId, type, startDate, name)
-    // console.log(result, 'controllerScreens.getScreens')
-    // console.log(req.query, 'req.query')
     serviceResponse.success(res, result)
   })
 
@@ -289,37 +290,37 @@ router.patch(
                         {
                             "seat_id": "A2",
                             "is_booked": true
-                        },
+                        }
                       ]
-                }
-          }
+                    }
+            }
           * #swagger.responses[200] = {
             description: '修改成功',
               schema: {
                 "status": true,
                 "data":{
-                "seatsStatus"：[
+                "seatsStatus":[
                     {
-                    "seat_id": "A1",
-                    "is_booked": true
+                      "seat_id": "A1",
+                      "is_booked": true
                     },
                     {
-                    "seat_id": "A2",
-                    "is_booked": true
-                    },
+                      "seat_id": "A2",
+                      "is_booked": true
+                    }
                 ],
                  "startDate": "2023-06-03T00:00:00.000Z",
-                    "movieId": {
-                        "_id": "6457a5189fe33a33dc9c81e5",
-                        "name": "星際異攻隊3"
-                    },
+                 "movieId": {
+                      "_id": "6457a5189fe33a33dc9c81e5",
+                      "name": "星際異攻隊3"
+                },
                 "theaterId": {
                       "_id": "6458e59aae4008081f29c7b1",
                       "type": 0
                   }
+                }
               }
             }
-          }
     */
     const { screenid } = req.params
     const { seatsStatus, startDate, theaterId } = req.body
