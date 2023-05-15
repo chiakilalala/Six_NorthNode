@@ -12,11 +12,10 @@ router.post(
   '/',
   middlewareAdminAuth,
   serviceError.asyncError(async (req, res, next) => {
-    const { name, imgs, level, desc, time, actors, videos, status, releaseData } = req.body
+    const { name, imgs, level, desc, time, director, actors, videos, videoImg, status, releaseData } = req.body
     if (!name || !level || !desc || !releaseData) {
       serviceResponse.error(httpCode.BAD_REQUEST, '欄位不可為空', next)
     }
-
     /**
      * #swagger.tags = ['Movie']
      * #swagger.summary = '新增電影資訊'
@@ -32,8 +31,10 @@ router.post(
                 "$level": 1,
                 "$desc":'一個神隱少女的故事',
                 "$time": 180,
+                "director": "string",
                 "actors": ["string"],
                 "videos": ["string"],
+                "videoImg": "string",
                 "status": 1,
                 "$releaseData": "2023-05-01"
         }
@@ -48,8 +49,10 @@ router.post(
             "level": 1,
             "desc": "一個神隱少女的故事",
             "time": 240,
+            "director": "導演名字",
             "actors": ["某某2", "某某4"],
             "videos": ["https://example.com/video1.mp4"],
+            "videoImg": "https://example.com/img1.jpg",
             "status": 1,
             "releaseData": "2023-05-01T00:00:00.000Z",
             "createTime": "2023-05-03T14:26:35.378Z",
@@ -65,8 +68,10 @@ router.post(
       level,
       desc,
       time,
+      director,
       actors,
       videos,
+      videoImg,
       status,
       releaseData)
     serviceResponse.success(res, result)
@@ -94,8 +99,10 @@ router.get(
               "level": 0,
               "desc": 'string',
               "time": 90,
+              "director": "導演名字",
               "actors": ['jason', 'vivian', 'echo'],
               "videos": ['https://example.com/video1.mp4'],
+              "videoImg": "https://example.com/img1.jpg",
               "status": 1,
               "release_data": 'yymmdd-hms'
             }
@@ -152,6 +159,8 @@ router.patch(
                   "$time": 180,
                   "actors": ["string"],
                   "videos": ["string"],
+                  "director": "string",
+                  "videoImg": "string",
                   "status": 1,
                   "$releaseData": "2023-05-04"
           }
@@ -168,8 +177,10 @@ router.patch(
                 "level": 2,
                 "desc": "一個沙贊的故事ddd",
                 "time": 240,
+                "director": "導演名字",
                 "actors": ["某某2" ],
                 "videos": [ "https://example.com/video1.mp4"],
+                "videoImg": "https://example.com/img1.jpg",
                 "status": 1,
                 "releaseData": "2323-01-01T00:00:00.000Z"
               },
@@ -209,8 +220,10 @@ router.delete(
             "level": 1,
             "desc": "一個神隱少女的故事",
             "time": 125,
+            "director": "",
             "actors": [],
             "videos": [],
+            "videoImg": "",
             "releaseData": "2023-05-01T12:00:00.000Z"
            }
           }

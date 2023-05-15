@@ -15,7 +15,7 @@ const modelExample = mongoose.model(
       type: Number,
       required: [true, '電影級別 未填寫'],
       default: 0,
-      enum: [0, 1, 2] // 0:普通1:保護2:限制
+      enum: [0, 1, 2, 3] // 0:普通 1:保護 2:限制 3:輔導12+
     },
     desc: {
       type: String,
@@ -25,6 +25,10 @@ const modelExample = mongoose.model(
       type: Number,
       default: 0
     },
+    director: {
+      type: String,
+      default: ''
+    },
     actors: {
       type: [String],
       default: []
@@ -32,6 +36,10 @@ const modelExample = mongoose.model(
     videos: {
       type: [String],
       default: []
+    },
+    videoImg: {
+      type: String,
+      default: ''
     },
     status: {
       type: Number,
@@ -43,7 +51,7 @@ const modelExample = mongoose.model(
       validator: function (v) {
         return v instanceof Date
       },
-      message: props => `${props.value} 不是一个有效的日期值`
+      message: props => `${props.value} 不是一個有效的日期值`
 
     },
     createTime: {
